@@ -44,7 +44,7 @@ jobs:
 
       - name: Test DynamoDB Local connection
         run : |
-          aws dynamodb list-tables --endpoint-url http://localhost:8000
+          aws dynamodb list-tables --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
 
       - name: Test code
         run: |

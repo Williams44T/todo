@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net"
 	proto "todo/proto/gen/service"
@@ -11,6 +12,8 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	// create listener; it's over 9000!
 	lis, err := net.Listen("tcp", ":9001")
 	if err != nil {
@@ -21,7 +24,11 @@ func main() {
 	server := grpc.NewServer()
 
 	// register server
-	proto.RegisterTodoServer(server, service.NewTodoServer())
+	todoService, err := service.NewTodoServer(ctx)
+	if err != nil {
+		log.Fatalf("failed to get todo service: %s", err)
+	}
+	proto.RegisterTodoServer(server, todoService)
 
 	// egister reflection service on server
 	reflection.Register(server)

@@ -1,0 +1,54 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: tests
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.20"
+
+      - name: Prepare dependencies
+        run: |
+          go mod download
+
+      # Might not need this step.
+      # - name: Configure AWS
+      #   run: |
+      #     aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws configure set aws_region ${{ variables.AWS_DEFAULT_REGION }}
+
+      - name: Setup DynamoDB Local
+        uses: rrainn/dynamodb-action@v4.0.0
+        with:
+          dbPath: # undefined by default, if this is undefined inMemory will be used
+          sharedDb: # undefined by default
+          delayTransientStatuses: # undefined by default
+          optimizeDbBeforeStartup: # undefined by default
+          version: # "latest" by default
+          port: 8000
+          cors: '*'
+
+      - name: Test DynamoDB Local connection
+        run : |
+          aws dynamodb list-tables
+
+      - name: Test code
+        run: |
+          go test -race ./...

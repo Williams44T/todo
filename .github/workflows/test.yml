@@ -27,12 +27,11 @@ jobs:
         run: |
           go mod download
 
-      # Might not need this step.
-      # - name: Configure AWS
-      #   run: |
-      #     aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws configure set aws_region ${{ variables.AWS_DEFAULT_REGION }}
+      - name: Configure AWS
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set aws_region ${{ variables.AWS_DEFAULT_REGION }}
 
       - name: Setup DynamoDB Local
         uses: rrainn/dynamodb-action@v4.0.0
@@ -46,7 +45,6 @@ jobs:
 
       - name: Test DynamoDB Local connection
         run : |
-          aws configure
           aws dynamodb list-tables
 
       - name: Test code

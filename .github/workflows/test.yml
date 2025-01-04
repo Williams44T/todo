@@ -41,7 +41,6 @@ jobs:
           sharedDb: # undefined by default
           delayTransientStatuses: # undefined by default
           optimizeDbBeforeStartup: # undefined by default
-          version: # "latest" by default
           port: 8000
           cors: '*'
 

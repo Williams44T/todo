@@ -42,10 +42,9 @@ jobs:
           port: 8000
           cors: '*'
 
-      - name: Test DynamoDB Local connection
+      - name: Add Tables to DynamoDB Local
         run : |
-          aws dynamodb create-table --cli-input-json file://./dynamodb/create-table-users.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
-          aws dynamodb list-tables
+          aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/create-table-users.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
 
       - name: Test code
         run: |

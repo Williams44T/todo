@@ -9,8 +9,14 @@ import (
 )
 
 type DynamoDBClient struct {
-	client *dynamodb.Client
+	client          *dynamodb.Client
+	usersTableName  string
+	tasksTableName  string
+	eventsTableName string
 }
+
+// make client implement defined interface
+var _ DynamoDBInterface = &DynamoDBClient{}
 
 func NewDynamoDBClient(ctx context.Context) (*DynamoDBClient, error) {
 	defaultConfig, err := config.LoadDefaultConfig(ctx)
@@ -18,11 +24,9 @@ func NewDynamoDBClient(ctx context.Context) (*DynamoDBClient, error) {
 		return nil, fmt.Errorf("failed to load default aws config: %v", err)
 	}
 	return &DynamoDBClient{
-		client: dynamodb.NewFromConfig(defaultConfig),
+		client:          dynamodb.NewFromConfig(defaultConfig),
+		usersTableName:  "todo-users",
+		tasksTableName:  "todo-tasks",
+		eventsTableName: "todo-events",
 	}, nil
-}
-
-func (ddb *DynamoDBClient) CreateTable(ctx context.Context) {
-	ddb.client.CreateTable(ctx, &dynamodb.CreateTableInput{})
-	ddb.client.GetItem(ctx, &dynamodb.GetItemInput{})
 }

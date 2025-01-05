@@ -44,7 +44,7 @@ jobs:
 
       - name: Test DynamoDB Local connection
         run : |
-          aws dynamodb create-table --cli-input-json ./dynamodb/create-table-movies.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
+          aws dynamodb create-table --cli-input-json file://./dynamodb/create-table-movies.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
           aws dynamodb list-tables
 
       - name: Test code

@@ -1,5 +1,5 @@
 {
-    "TableName": "todoUsers",
+    "TableName": "todo-users",
     "KeySchema": [
       { "AttributeName": "id", "KeyType": "HASH" }
     ],

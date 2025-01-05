@@ -1,0 +1,9 @@
+{
+    "TableName": "todoUsers",
+    "KeySchema": [
+      { "AttributeName": "id", "KeyType": "HASH" }
+    ],
+    "AttributeDefinitions": [
+      { "AttributeName": "id", "AttributeType": "S" }
+    ]
+}

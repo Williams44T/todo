@@ -5,6 +5,7 @@ go 1.23.4
 require (
 	github.com/aws/aws-sdk-go-v2/config v1.28.7
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.38.1
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	google.golang.org/grpc v1.69.2
 	google.golang.org/protobuf v1.36.1
 )

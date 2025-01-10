@@ -6,6 +6,7 @@ import (
 	"net"
 	proto "todo/proto/gen/service"
 	"todo/service"
+	"todo/service/interceptor"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -20,8 +21,14 @@ func main() {
 		log.Fatalf("failed to create listener: %s", err)
 	}
 
+	// get interceptor
+	interceptor, err := interceptor.NewInterceptor()
+	if err != nil {
+		log.Fatalf("failed to get interceptor: %s", err)
+	}
+
 	// create server
-	server := grpc.NewServer()
+	server := grpc.NewServer(grpc.UnaryInterceptor(interceptor.UnaryAuthMiddleware))
 
 	// register server
 	todoService, err := service.NewTodoServer(ctx)

@@ -50,6 +50,7 @@ jobs:
           go run ./cmd/service/service.go &
 
       - name: Test code
+        uses: ./
         with:
           working-directory: ./
           start: make test

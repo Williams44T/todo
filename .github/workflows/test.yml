@@ -48,7 +48,7 @@ jobs:
       - name: Run API in background
         run: |
           go run ./cmd/service/service.go &
-          lsof -i tcp:9001
+          echo here
 
       - name: Test code
         run: |

@@ -46,10 +46,10 @@ jobs:
       #     aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/events.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
 
       - name: Run API in background
-          run: |
-            go run ./cmd/service/service.go &
-          env:
-            PORT: 9001
+        run: |
+          go run ./cmd/service/service.go &
+        env:
+          PORT: 9001
 
       - name: Test code
         run: |

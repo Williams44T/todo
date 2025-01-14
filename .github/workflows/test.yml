@@ -50,8 +50,7 @@ jobs:
           go run ./cmd/service/service.go &
 
       - name: Test code
-        uses: ./
+        run: make test
         with:
-          start: make test
           wait-on: 'http://localhost:9001'
           wait-on-timeout: 20

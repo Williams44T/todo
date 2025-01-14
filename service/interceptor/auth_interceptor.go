@@ -15,7 +15,7 @@ const (
 	JWT_METADATA_KEY           = "jwt"
 )
 
-// UnaryAuthMiddleware autheticates JWTs.
+// UnaryAuthMiddleware authenticates JWTs.
 // An "authorization" key set to the user's jwt must be provided in the metadata of the incoming context.
 // Users attempting to sign up or sign in do not need a jwt in the metadata, but
 // the "authorization" field should still exist in the metadata.

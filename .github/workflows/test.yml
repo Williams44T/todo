@@ -1,9 +1,6 @@
 name: tests
 
 on:
-  push:
-    branches:
-      - '*'
   pull_request:
     branches:
       - main
@@ -48,6 +45,10 @@ jobs:
       #     aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/tasks.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
       #     aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/events.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
 
+      - name: Start Background Todo Server
+        run: |
+          make server
+
       - name: Test code
         run: |
-          go test -race ./...
+          make test

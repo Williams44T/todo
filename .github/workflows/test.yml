@@ -15,6 +15,10 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
       AWS_ENDPOINT_URL: ${{ vars.AWS_ENDPOINT_URL }}
+    services:
+      todo:
+        build: ./cmd/service/service.go
+        ports: 9001:9001
 
     steps:
       - name: Checkout
@@ -44,10 +48,6 @@ jobs:
       #     aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/users.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
       #     aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/tasks.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
       #     aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/events.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
-
-      - name: Start Background Todo Server
-        run: |
-          make server
 
       - name: Test code
         run: |

@@ -48,8 +48,10 @@ jobs:
       - name: Run API in background
         run: |
           go run ./cmd/service/service.go &
-          wait-on http://localhost:9001
 
       - name: Test code
-        run: |
-          make test
+        uses: ./
+        with:
+          start: make test
+          wait-on: 'http://localhost:9001'
+          wait-on-timeout: 20

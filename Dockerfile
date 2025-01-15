@@ -2,7 +2,7 @@
 FROM golang:1.18-alpine AS builder
 
 # Set the working directory in the container
-WORKDIR /
+WORKDIR /cmd/service
 
 # Copy the project files into the container
 COPY . .
@@ -17,10 +17,10 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main .
 FROM alpine:latest
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /
 
 # Copy the binary from the builder stage
-COPY --from=builder /main .
+COPY --from=builder /cmd/service/service.go .
 
 # Expose the port that your gRPC server listens on
 EXPOSE 9001

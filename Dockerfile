@@ -2,7 +2,7 @@
 FROM golang:1.18-alpine AS builder
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /
 
 # Copy the project files into the container
 COPY . .
@@ -20,7 +20,7 @@ FROM alpine:latest
 WORKDIR /app
 
 # Copy the binary from the builder stage
-COPY --from=builder /app/main .
+COPY --from=builder /main .
 
 # Expose the port that your gRPC server listens on
 EXPOSE 9001

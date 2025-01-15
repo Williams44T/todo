@@ -20,7 +20,7 @@ func main() {
 
 	// create client
 	conn, err := grpc.NewClient(
-		"localhost:9001",
+		":9001",
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithUnaryInterceptor(interceptor.UnaryAuthMiddleware),
 	)

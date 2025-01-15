@@ -45,9 +45,10 @@ jobs:
       #     aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/tasks.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
       #     aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/events.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
 
-      - name: Run API in background
+      - name: Run API in docker container
         run: |
-          go run ./cmd/service/service.go &
+          docker build -t your-grpc-server .
+          docker run -p 9001:9001 your-grpc-server
 
       - name: Test code
         run: |

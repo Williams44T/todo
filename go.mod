@@ -1,6 +1,6 @@
 module todo
 
-go 1.23.4
+go 1.23
 
 require (
 	github.com/aws/aws-sdk-go-v2/config v1.28.7

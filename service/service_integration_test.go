@@ -1,6 +1,3 @@
-//go:build github_actions
-// +build github_actions
-
 package service
 
 import (
@@ -19,7 +16,6 @@ func Test_Integration_todoServer_Signup(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		fields  fields
 		args    args
 		wantErr bool
 	}{
@@ -60,7 +56,7 @@ func Test_Integration_todoServer_Signup(t *testing.T) {
 				jwt: tokenManager,
 			}
 
-			_, err := tr.Signup(tt.args.ctx, tt.args.req)
+			_, err = tr.Signup(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("todoServer.Signup() error = %v, wantErr %v", err, tt.wantErr)
 				return

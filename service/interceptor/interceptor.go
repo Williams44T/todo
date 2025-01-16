@@ -21,7 +21,7 @@ func NewInterceptor() (*Interceptor, error) {
 	// get token manager
 	jwtSecret, ok := os.LookupEnv(JWT_SECRET_ENV_KEY)
 	if !ok {
-		return nil, fmt.Errorf("%s must ber provided as an environment variable", JWT_SECRET_ENV_KEY)
+		return nil, fmt.Errorf("%s must be provided as an environment variable", JWT_SECRET_ENV_KEY)
 	}
 	tokenManager, err := token_manager.NewTokenManager(jwtSecret)
 	if err != nil {

@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	Todo_Signup_FullMethodName  = "/service.Todo/Signup"
 	Todo_GetTodo_FullMethodName = "/service.Todo/GetTodo"
 )
 
@@ -26,6 +27,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TodoClient interface {
+	Signup(ctx context.Context, in *SignupReq, opts ...grpc.CallOption) (*SignupResp, error)
 	GetTodo(ctx context.Context, in *GetTodoReq, opts ...grpc.CallOption) (*GetTodoResp, error)
 }
 
@@ -35,6 +37,16 @@ type todoClient struct {
 
 func NewTodoClient(cc grpc.ClientConnInterface) TodoClient {
 	return &todoClient{cc}
+}
+
+func (c *todoClient) Signup(ctx context.Context, in *SignupReq, opts ...grpc.CallOption) (*SignupResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SignupResp)
+	err := c.cc.Invoke(ctx, Todo_Signup_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *todoClient) GetTodo(ctx context.Context, in *GetTodoReq, opts ...grpc.CallOption) (*GetTodoResp, error) {
@@ -51,6 +63,7 @@ func (c *todoClient) GetTodo(ctx context.Context, in *GetTodoReq, opts ...grpc.C
 // All implementations must embed UnimplementedTodoServer
 // for forward compatibility.
 type TodoServer interface {
+	Signup(context.Context, *SignupReq) (*SignupResp, error)
 	GetTodo(context.Context, *GetTodoReq) (*GetTodoResp, error)
 	mustEmbedUnimplementedTodoServer()
 }
@@ -62,6 +75,9 @@ type TodoServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTodoServer struct{}
 
+func (UnimplementedTodoServer) Signup(context.Context, *SignupReq) (*SignupResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Signup not implemented")
+}
 func (UnimplementedTodoServer) GetTodo(context.Context, *GetTodoReq) (*GetTodoResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTodo not implemented")
 }
@@ -84,6 +100,24 @@ func RegisterTodoServer(s grpc.ServiceRegistrar, srv TodoServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Todo_ServiceDesc, srv)
+}
+
+func _Todo_Signup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SignupReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TodoServer).Signup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Todo_Signup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TodoServer).Signup(ctx, req.(*SignupReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Todo_GetTodo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -111,6 +145,10 @@ var Todo_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "service.Todo",
 	HandlerType: (*TodoServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Signup",
+			Handler:    _Todo_Signup_Handler,
+		},
 		{
 			MethodName: "GetTodo",
 			Handler:    _Todo_GetTodo_Handler,

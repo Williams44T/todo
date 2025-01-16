@@ -3,13 +3,35 @@ package dynamodb
 import (
 	"context"
 	"errors"
+	"fmt"
+
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
-type AddUserReq struct{}
+type User struct {
+	ID             string `dynamodbav:"id"`
+	FirstName      string `dynamodbav:"first_name"`
+	LastName       string `dynamodbav:"last_name"`
+	Email          string `dynamodbav:"email"`
+	HashedPassword string `dynamodbav:"hashed_password"`
+}
+
+type AddUserReq struct {
+	User User
+}
 type AddUserResp struct{}
 
 func (ddb *DynamoDBClient) AddUser(ctx context.Context, req *AddUserReq) (*AddUserResp, error) {
-	return nil, errors.New("not implemented yet")
+	item, err := attributevalue.MarshalMap(req.User)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal user: %v", err)
+	}
+	ddb.client.PutItem(ctx, &dynamodb.PutItemInput{
+		TableName: &ddb.usersTableName,
+		Item:      item,
+	})
+	return &AddUserResp{}, nil
 }
 
 type GetUserReq struct{}

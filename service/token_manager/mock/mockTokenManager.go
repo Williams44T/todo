@@ -20,9 +20,13 @@ var _ token_manager.TokenManagerInterface = &MockTokenManager{}
 // IssueToken creates new "token" by incrementing by 1 for each token (token_id_1, token_id_2, etc).
 // It then adds that "token" to the TokenMap with the user ID as the value.
 func (mtm *MockTokenManager) IssueToken(userID string) (string, error) {
+	if mtm.TokenMap == nil {
+		mtm.TokenMap = make(map[string]string)
+	}
 	mtm.count++
-	mtm.TokenMap[fmt.Sprintf("token_id_%d", mtm.count)] = userID
-	return "", mtm.IssueTokenErr
+	token := fmt.Sprintf("token_id_%d", mtm.count)
+	mtm.TokenMap[token] = userID
+	return token, mtm.IssueTokenErr
 }
 
 // VerifyToken checks if the given token exists in the TokenMap and returns an error if not.

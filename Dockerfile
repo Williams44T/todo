@@ -5,7 +5,7 @@ FROM golang:1.23-alpine AS builder
 WORKDIR /app
 
 # Copy go.mod and go.sum files
-COPY go.mod go.sum ./
+# COPY go.mod go.sum ./
 
 # Install the necessary dependencies
 RUN go mod download 
@@ -25,7 +25,7 @@ WORKDIR /app
 # Copy the binary from the builder stage
 COPY --from=builder /app/bin/server .
 
-ENV JWT_SECRET='jwt-secret'
+# ENV JWT_SECRET='jwt-secret'
 
 # Expose the port that your gRPC server listens on
 EXPOSE 9001

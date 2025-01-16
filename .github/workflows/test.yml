@@ -46,11 +46,10 @@ jobs:
       #     aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/tasks.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
       #     aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/events.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
 
-      # JWT_SECRET=${{ env.JWT_SECRET }} docker run -p 9001:9001 your-grpc-server &
       - name: Run API in background docker container
         run: |
           docker build -t your-grpc-server .
-          docker run -p 9001:9001 your-grpc-server &
+          JWT_SECRET=${{ env.JWT_SECRET }} docker run -p 9001:9001 your-grpc-server &
 
       - name: Test code
         run: |

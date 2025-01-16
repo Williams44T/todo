@@ -48,7 +48,7 @@ jobs:
       - name: Run API in docker container
         run: |
           docker build -t your-grpc-server .
-          JWT_SECRET="jwt-secret" docker run -p 9001:9001 your-grpc-server
+          docker run -p 9001:9001 your-grpc-server &
 
       - name: Test code
         run: |

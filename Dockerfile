@@ -26,6 +26,7 @@ WORKDIR /app
 COPY --from=builder /app/bin/server .
 
 # This env var will be set with the docker build command
+ARG JWT_SECRET
 ENV JWT_SECRET=$JWT_SECRET
 
 # Expose the port that your gRPC server listens on

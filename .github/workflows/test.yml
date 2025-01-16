@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: Development
     env:
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
@@ -48,7 +47,7 @@ jobs:
 
       - name: Run API in background docker container
         run: |
-          docker build -t your-grpc-server --build-arg JWT_SECRET=${{ env.JWT_SECRET }} . 
+          docker build -t your-grpc-server --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} . 
           docker run -p 9001:9001 your-grpc-server &
 
       - name: Test code

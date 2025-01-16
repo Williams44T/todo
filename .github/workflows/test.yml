@@ -48,8 +48,8 @@ jobs:
 
       - name: Run API in background docker container
         run: |
-          docker build -t your-grpc-server .
-          JWT_SECRET=${{ env.JWT_SECRET }} docker run -p 9001:9001 your-grpc-server &
+          docker build -t your-grpc-server --build-arg JWT_SECRET=${{ env.JWT_SECRET }} . 
+          docker run -p 9001:9001 your-grpc-server &
 
       - name: Test code
         run: |

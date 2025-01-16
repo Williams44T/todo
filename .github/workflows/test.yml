@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Development
     env:
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
@@ -46,10 +47,8 @@ jobs:
       #     aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/events.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
 
       - name: Run API in background docker container
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
-          docker build -t your-grpc-server --build-arg JWT_SECRET=${{ env.JWT_SECRET }} . 
+          docker build -t your-grpc-server --build-arg JWT_SECRET='${{ env.JWT_SECRET }}' . 
           docker run -p 9001:9001 your-grpc-server &
 
       - name: Test code

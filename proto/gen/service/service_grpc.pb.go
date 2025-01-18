@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Todo_Signup_FullMethodName  = "/service.Todo/Signup"
+	Todo_Signin_FullMethodName  = "/service.Todo/Signin"
 	Todo_GetTodo_FullMethodName = "/service.Todo/GetTodo"
 )
 
@@ -28,6 +29,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TodoClient interface {
 	Signup(ctx context.Context, in *SignupReq, opts ...grpc.CallOption) (*SignupResp, error)
+	Signin(ctx context.Context, in *SigninReq, opts ...grpc.CallOption) (*SigninResp, error)
 	GetTodo(ctx context.Context, in *GetTodoReq, opts ...grpc.CallOption) (*GetTodoResp, error)
 }
 
@@ -49,6 +51,16 @@ func (c *todoClient) Signup(ctx context.Context, in *SignupReq, opts ...grpc.Cal
 	return out, nil
 }
 
+func (c *todoClient) Signin(ctx context.Context, in *SigninReq, opts ...grpc.CallOption) (*SigninResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SigninResp)
+	err := c.cc.Invoke(ctx, Todo_Signin_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *todoClient) GetTodo(ctx context.Context, in *GetTodoReq, opts ...grpc.CallOption) (*GetTodoResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetTodoResp)
@@ -64,6 +76,7 @@ func (c *todoClient) GetTodo(ctx context.Context, in *GetTodoReq, opts ...grpc.C
 // for forward compatibility.
 type TodoServer interface {
 	Signup(context.Context, *SignupReq) (*SignupResp, error)
+	Signin(context.Context, *SigninReq) (*SigninResp, error)
 	GetTodo(context.Context, *GetTodoReq) (*GetTodoResp, error)
 	mustEmbedUnimplementedTodoServer()
 }
@@ -77,6 +90,9 @@ type UnimplementedTodoServer struct{}
 
 func (UnimplementedTodoServer) Signup(context.Context, *SignupReq) (*SignupResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Signup not implemented")
+}
+func (UnimplementedTodoServer) Signin(context.Context, *SigninReq) (*SigninResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Signin not implemented")
 }
 func (UnimplementedTodoServer) GetTodo(context.Context, *GetTodoReq) (*GetTodoResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTodo not implemented")
@@ -120,6 +136,24 @@ func _Todo_Signup_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Todo_Signin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SigninReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TodoServer).Signin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Todo_Signin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TodoServer).Signin(ctx, req.(*SigninReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Todo_GetTodo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTodoReq)
 	if err := dec(in); err != nil {
@@ -148,6 +182,10 @@ var Todo_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Signup",
 			Handler:    _Todo_Signup_Handler,
+		},
+		{
+			MethodName: "Signin",
+			Handler:    _Todo_Signin_Handler,
 		},
 		{
 			MethodName: "GetTodo",

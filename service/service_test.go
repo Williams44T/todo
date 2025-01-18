@@ -156,8 +156,171 @@ func Test_todoServer_Signup(t *testing.T) {
 				t.Errorf("todoServer.Signup() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+			// We can't guess the user id, so just check for existence and then erase it so the next check passes.
+			if tt.want != nil && got != nil {
+				if got.UserID == "" {
+					t.Error("todoServer.Signup() no user id returned")
+				}
+				got.UserID = ""
+			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("todoServer.Signup() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_todoServer_Signin(t *testing.T) {
+	hashedPassword, err := hashPassword("password")
+	if err != nil {
+		t.Errorf("todoServer.Signin() failed to hash password: %v", err)
+	}
+	type fields struct {
+		UnimplementedTodoServer proto.UnimplementedTodoServer
+		ddb                     dynamodb.DynamoDBInterface
+		jwt                     token_manager.TokenManagerInterface
+	}
+	type args struct {
+		ctx context.Context
+		req *proto.SigninReq
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *proto.SigninResp
+		wantErr bool
+	}{
+		{
+			name: "happy path",
+			fields: fields{
+				ddb: &ddbMock.MockDynamoDBClient{
+					UsersTable: map[string]dynamodb.User{
+						"test-user-id": {
+							HashedPassword: hashedPassword,
+						},
+					},
+				},
+				jwt: &tmMock.MockTokenManager{},
+			},
+			args: args{
+				ctx: context.Background(),
+				req: &proto.SigninReq{
+					UserID:   "test-user-id",
+					Password: "password",
+				},
+			},
+			want: &proto.SigninResp{
+				AccessJWT: "token_id_1",
+			},
+			wantErr: false,
+		},
+		{
+			name: "empty user id",
+			fields: fields{
+				ddb: &ddbMock.MockDynamoDBClient{
+					UsersTable: map[string]dynamodb.User{
+						"test-user-id": {
+							HashedPassword: hashedPassword,
+						},
+					},
+				},
+				jwt: &tmMock.MockTokenManager{},
+			},
+			args: args{
+				ctx: context.Background(),
+				req: &proto.SigninReq{
+					UserID:   "",
+					Password: "password",
+				},
+			},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "invalid password",
+			fields: fields{
+				ddb: &ddbMock.MockDynamoDBClient{
+					UsersTable: map[string]dynamodb.User{
+						"test-user-id": {
+							HashedPassword: hashedPassword,
+						},
+					},
+				},
+				jwt: &tmMock.MockTokenManager{},
+			},
+			args: args{
+				ctx: context.Background(),
+				req: &proto.SigninReq{
+					UserID:   "test-user-id",
+					Password: "invalid_password",
+				},
+			},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "GetUser returns error",
+			fields: fields{
+				ddb: &ddbMock.MockDynamoDBClient{
+					UsersTable: map[string]dynamodb.User{
+						"test-user-id": {
+							HashedPassword: hashedPassword,
+						},
+					},
+					GetUserErr: errors.New("test error"),
+				},
+				jwt: &tmMock.MockTokenManager{},
+			},
+			args: args{
+				ctx: context.Background(),
+				req: &proto.SigninReq{
+					UserID:   "test-user-id",
+					Password: "password",
+				},
+			},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "IssueToken returns error",
+			fields: fields{
+				ddb: &ddbMock.MockDynamoDBClient{
+					UsersTable: map[string]dynamodb.User{
+						"test-user-id": {
+							HashedPassword: hashedPassword,
+						},
+					},
+				},
+				jwt: &tmMock.MockTokenManager{
+					IssueTokenErr: errors.New("test error"),
+				},
+			},
+			args: args{
+				ctx: context.Background(),
+				req: &proto.SigninReq{
+					UserID:   "test-user-id",
+					Password: "password",
+				},
+			},
+			want:    nil,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tr := &todoServer{
+				UnimplementedTodoServer: tt.fields.UnimplementedTodoServer,
+				ddb:                     tt.fields.ddb,
+				jwt:                     tt.fields.jwt,
+			}
+			got, err := tr.Signin(tt.args.ctx, tt.args.req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("todoServer.Signin() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("todoServer.Signin() = %v, want %v", got, tt.want)
 			}
 		})
 	}

@@ -22,23 +22,53 @@ type AddUserReq struct {
 }
 type AddUserResp struct{}
 
+// AddUser puts a user into the users table exactly as given.
 func (ddb *DynamoDBClient) AddUser(ctx context.Context, req *AddUserReq) (*AddUserResp, error) {
 	item, err := attributevalue.MarshalMap(req.User)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal user: %v", err)
 	}
-	ddb.client.PutItem(ctx, &dynamodb.PutItemInput{
+	_, err = ddb.client.PutItem(ctx, &dynamodb.PutItemInput{
 		TableName: &ddb.usersTableName,
 		Item:      item,
 	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to put user into users table: %v", err)
+	}
 	return &AddUserResp{}, nil
 }
 
-type GetUserReq struct{}
-type GetUserResp struct{}
+type GetUserReq struct {
+	ID string `dynamodbav:"id"`
+}
+type GetUserResp struct {
+	User *User
+}
 
+// GetUser uses the given user id to find a user.
+// User will be nil if no user is found.
 func (ddb *DynamoDBClient) GetUser(ctx context.Context, req *GetUserReq) (*GetUserResp, error) {
-	return nil, errors.New("not implemented yet")
+	key, err := attributevalue.MarshalMap(req.ID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal user ID: %v", err)
+	}
+	getItemResp, err := ddb.client.GetItem(ctx, &dynamodb.GetItemInput{
+		TableName: &ddb.usersTableName,
+		Key:       key,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get user: %v", err)
+	}
+	var user *User
+	if getItemResp.Item != nil {
+		err = attributevalue.UnmarshalMap(getItemResp.Item, user)
+		if err != nil {
+			return nil, fmt.Errorf("failed to unmarshal user: %v", err)
+		}
+	}
+	return &GetUserResp{
+		User: user,
+	}, nil
 }
 
 type UpdateUserReq struct{}

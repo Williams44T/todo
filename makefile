@@ -4,8 +4,8 @@ proto-gen:
 server:
 	go run ./cmd/service/service.go &
 
-test: build-cli
-	go test -v ./...
+test:
+	go test -tags=\!integration ./...
 
 build-cli:
 	go build -o ./todo-cli ./cli/cli.go

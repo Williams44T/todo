@@ -46,6 +46,11 @@ jobs:
           aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/tasks.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
           aws dynamodb create-table --cli-input-json file://./dynamodb/table-definitions/events.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
 
+      - name: Populate Tables in DynamoDB Local
+        run: |
+          go run ./scripts/generate_ddb_batch_write_req
+          aws dynamodb batch-write-item --request-items file://dynamodb/mock/batch_write_req.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
+
       - name: Run API in background docker container
         run: |
           docker build -t your-grpc-server --build-arg JWT_SECRET='${{ env.JWT_SECRET }}' . 
@@ -53,4 +58,4 @@ jobs:
 
       - name: Test code
         run: |
-          make test
+          go test -v ./...

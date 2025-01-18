@@ -7,6 +7,9 @@ import (
 )
 
 type MockDynamoDBClient struct {
+	// Tables
+	UsersTable map[string]dynamodb.User
+
 	// Users
 	AddUserErr    error
 	GetUserErr    error
@@ -35,11 +38,24 @@ func (mdb *MockDynamoDBClient) AddUser(ctx context.Context, req *dynamodb.AddUse
 	if mdb.AddUserErr != nil {
 		return nil, mdb.AddUserErr
 	}
+	if mdb.UsersTable == nil {
+		mdb.UsersTable = make(map[string]dynamodb.User)
+	}
+	mdb.UsersTable[req.User.ID] = req.User
 	return &dynamodb.AddUserResp{}, nil
 }
 
 func (mdb *MockDynamoDBClient) GetUser(ctx context.Context, req *dynamodb.GetUserReq) (*dynamodb.GetUserResp, error) {
-	return nil, errors.New("not implemented")
+	if mdb.GetUserErr != nil {
+		return nil, mdb.GetUserErr
+	}
+	if mdb.UsersTable == nil {
+		return nil, errors.New("UsersTable does not exist")
+	}
+	user := mdb.UsersTable[req.ID]
+	return &dynamodb.GetUserResp{
+		User: &user,
+	}, nil
 }
 
 func (mdb *MockDynamoDBClient) UpdateUser(ctx context.Context, req *dynamodb.UpdateUserReq) (*dynamodb.UpdateUserResp, error) {

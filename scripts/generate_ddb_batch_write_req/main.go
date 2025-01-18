@@ -35,7 +35,7 @@ type WriteRequest struct {
 	PutRequest PutRequest `json:"PutRequest"`
 }
 type RequestItems struct {
-	Todo_users []WriteRequest `json:"Todo_users"`
+	UsersTable []WriteRequest `json:"todo-users"`
 }
 
 func getPutRequest(id string, hashedPassword string) PutRequest {
@@ -63,7 +63,7 @@ func hashPassword(password string) string {
 
 func main() {
 	data := RequestItems{
-		Todo_users: []WriteRequest{
+		UsersTable: []WriteRequest{
 			{PutRequest: getPutRequest("test-user-1", hashPassword("password"))},
 		},
 	}

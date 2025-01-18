@@ -1,5 +1,5 @@
 {
-  "Todo_users": [
+  "todo-users": [
     {
       "PutRequest": {
         "Item": {
@@ -7,7 +7,7 @@
             "S": "test-user-1"
           },
           "HashedPassword": {
-            "S": "$argon2id$v=19$m=65536,t=1,p=8$TsyP5acg668aFEOgWcUTAw$RpIdrss6B0y7LChugazhgJKlpemJEuhfFCnIgQYvcDA"
+            "S": "$argon2id$v=19$m=65536,t=1,p=8$AUNtwmbFXZfMLP6vEH0uuQ$NrGAajVW7POoyDROin12up25WowkpygB7HEtkZxZhIU"
           }
         }
       }

@@ -37,9 +37,6 @@ type WriteRequest struct {
 type RequestItems struct {
 	TodoUsers []WriteRequest `json:"TodoUsers"`
 }
-type BatchWriteItemReq struct {
-	RequestItems RequestItems `json:"RequestItems"`
-}
 
 func getPutRequest(id string, hashedPassword string) PutRequest {
 	return PutRequest{
@@ -65,11 +62,9 @@ func hashPassword(password string) string {
 }
 
 func main() {
-	data := BatchWriteItemReq{
-		RequestItems: RequestItems{
-			TodoUsers: []WriteRequest{
-				{PutRequest: getPutRequest("test-user-1", hashPassword("password"))},
-			},
+	data := RequestItems{
+		TodoUsers: []WriteRequest{
+			{PutRequest: getPutRequest("test-user-1", hashPassword("password"))},
 		},
 	}
 

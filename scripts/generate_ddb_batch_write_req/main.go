@@ -63,7 +63,7 @@ func hashPassword(password string) string {
 
 func main() {
 	data := RequestItems{
-		TodoUsers: []WriteRequest{
+		Todo_users: []WriteRequest{
 			{PutRequest: getPutRequest("test-user-1", hashPassword("password"))},
 		},
 	}

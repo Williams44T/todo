@@ -12,11 +12,6 @@ import (
 	"github.com/alexedwards/argon2id"
 )
 
-type Person struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
-}
-
 // https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_BatchWriteItem.html
 type ID struct {
 	S string `json:"S"`
@@ -25,8 +20,8 @@ type HashedPassword struct {
 	S string `json:"S"`
 }
 type Item struct {
-	ID             ID             `json:"ID"`
-	HashedPassword HashedPassword `json:"HashedPassword"`
+	ID             ID             `json:"id"`
+	HashedPassword HashedPassword `json:"hashed_password"`
 }
 type PutRequest struct {
 	Item Item `json:"Item"`

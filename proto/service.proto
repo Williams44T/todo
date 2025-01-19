@@ -4,10 +4,12 @@ package service;
 
 option go_package = "./gen/service";
 
+import "tasks.proto";
+
 service Todo {
     rpc Signup (SignupReq) returns (SignupResp) {}
     rpc Signin (SigninReq) returns (SigninResp) {}
-    rpc GetTodo (GetTodoReq) returns (GetTodoResp) {}
+    rpc AddTask (AddTaskReq) returns (AddTaskResp) {}
 }
 
 message SignupReq {
@@ -29,15 +31,4 @@ message SigninReq {
 
 message SigninResp {
     string accessJWT = 1;
-}
-
-message GetTodoReq {}
-
-message GetTodoResp {
-    repeated Task tasks = 1;
-}
-
-message Task {
-    string title = 1;
-    string description = 2;
 }

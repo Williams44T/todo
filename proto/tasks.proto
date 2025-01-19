@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package service;
+
+option go_package = "./gen/service";
+
+enum Status {
+    INCOMPLETE = 0;
+    COMPLETE = 1;
+}
+
+message RecurringRule {
+    string cronExpression = 1;
+    // start_date is represented as a unix timestamp
+    int64 start_date = 2;
+    // end_date is represented as a unix timestamp
+    int64 end_date = 3;
+}
+
+message Task {
+    string id = 1;
+    string userid = 2;
+    string title = 3;
+    string description = 4;
+    Status status = 5;
+    repeated string tags = 6;
+    // parents is a list of task ids belonging to task that need
+    // to be completed before this task
+    repeated string parents = 7;
+    // due_date is represented as a unix timestamp
+    int64 due_date = 8;
+    RecurringRule recurring_rule = 9;
+}
+
+message AddTaskReq {
+    string title = 1;
+    string description = 2;
+    Status status = 3;
+    repeated string tags = 4;
+    // parents is a list of task ids belonging to task that need
+    // to be completed before this task
+    repeated string parents = 5;
+    // due_date is represented as a unix timestamp
+    int64 due_date = 6;
+    RecurringRule recurring_rule = 7;
+}
+
+message AddTaskResp {
+}

@@ -3,6 +3,7 @@ module todo
 go 1.23
 
 require (
+	github.com/adhocore/gronx v1.19.5
 	github.com/alexedwards/argon2id v1.0.0
 	github.com/aws/aws-sdk-go-v2/config v1.28.7
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.15.27

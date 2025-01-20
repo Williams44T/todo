@@ -5,6 +5,7 @@ import (
 	"errors"
 	"reflect"
 	"testing"
+	"todo/common"
 	"todo/service/token_manager"
 	"todo/service/token_manager/mock"
 
@@ -24,7 +25,7 @@ func (m *mockServerTransportStream) SetTrailer(md metadata.MD) error { return ni
 func TestInterceptor_UnaryAuthMiddleware(t *testing.T) {
 	ctx := context.Background()
 	ctx = grpc.NewContextWithServerTransportStream(ctx, &mockServerTransportStream{})
-	validCtx := metadata.NewIncomingContext(ctx, metadata.Pairs("authorization", "token"))
+	validCtx := metadata.NewIncomingContext(ctx, metadata.Pairs(common.AUTHORIZATION_METADATA_KEY, "token"))
 
 	type fields struct {
 		jwt token_manager.TokenManagerInterface

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"reflect"
 	"testing"
+	"todo/common"
 	"todo/dynamodb"
 	ddbMock "todo/dynamodb/mock"
 	proto "todo/proto/gen/service"
@@ -171,7 +172,7 @@ func Test_todoServer_Signup(t *testing.T) {
 }
 
 func Test_todoServer_Signin(t *testing.T) {
-	hashedPassword, err := hashPassword("password")
+	hashedPassword, err := hashPassword(common.TEST_USER_1_PASSWORD)
 	if err != nil {
 		t.Errorf("todoServer.Signin() failed to hash password: %v", err)
 	}
@@ -196,7 +197,7 @@ func Test_todoServer_Signin(t *testing.T) {
 			fields: fields{
 				ddb: &ddbMock.MockDynamoDBClient{
 					UsersTable: map[string]dynamodb.User{
-						"test-user-id": {
+						common.TEST_USER_1_ID: {
 							HashedPassword: hashedPassword,
 						},
 					},
@@ -206,8 +207,8 @@ func Test_todoServer_Signin(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &proto.SigninReq{
-					UserID:   "test-user-id",
-					Password: "password",
+					UserID:   common.TEST_USER_1_ID,
+					Password: common.TEST_USER_1_PASSWORD,
 				},
 			},
 			want: &proto.SigninResp{
@@ -220,7 +221,7 @@ func Test_todoServer_Signin(t *testing.T) {
 			fields: fields{
 				ddb: &ddbMock.MockDynamoDBClient{
 					UsersTable: map[string]dynamodb.User{
-						"test-user-id": {
+						common.TEST_USER_1_ID: {
 							HashedPassword: hashedPassword,
 						},
 					},
@@ -231,7 +232,7 @@ func Test_todoServer_Signin(t *testing.T) {
 				ctx: context.Background(),
 				req: &proto.SigninReq{
 					UserID:   "",
-					Password: "password",
+					Password: common.TEST_USER_1_PASSWORD,
 				},
 			},
 			want:    nil,
@@ -242,7 +243,7 @@ func Test_todoServer_Signin(t *testing.T) {
 			fields: fields{
 				ddb: &ddbMock.MockDynamoDBClient{
 					UsersTable: map[string]dynamodb.User{
-						"test-user-id": {
+						common.TEST_USER_1_ID: {
 							HashedPassword: hashedPassword,
 						},
 					},
@@ -252,7 +253,7 @@ func Test_todoServer_Signin(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &proto.SigninReq{
-					UserID:   "test-user-id",
+					UserID:   common.TEST_USER_1_ID,
 					Password: "invalid_password",
 				},
 			},
@@ -264,7 +265,7 @@ func Test_todoServer_Signin(t *testing.T) {
 			fields: fields{
 				ddb: &ddbMock.MockDynamoDBClient{
 					UsersTable: map[string]dynamodb.User{
-						"test-user-id": {
+						common.TEST_USER_1_ID: {
 							HashedPassword: hashedPassword,
 						},
 					},
@@ -275,8 +276,8 @@ func Test_todoServer_Signin(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &proto.SigninReq{
-					UserID:   "test-user-id",
-					Password: "password",
+					UserID:   common.TEST_USER_1_ID,
+					Password: common.TEST_USER_1_PASSWORD,
 				},
 			},
 			want:    nil,
@@ -287,7 +288,7 @@ func Test_todoServer_Signin(t *testing.T) {
 			fields: fields{
 				ddb: &ddbMock.MockDynamoDBClient{
 					UsersTable: map[string]dynamodb.User{
-						"test-user-id": {
+						common.TEST_USER_1_ID: {
 							HashedPassword: hashedPassword,
 						},
 					},
@@ -299,8 +300,8 @@ func Test_todoServer_Signin(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &proto.SigninReq{
-					UserID:   "test-user-id",
-					Password: "password",
+					UserID:   common.TEST_USER_1_ID,
+					Password: common.TEST_USER_1_PASSWORD,
 				},
 			},
 			want:    nil,

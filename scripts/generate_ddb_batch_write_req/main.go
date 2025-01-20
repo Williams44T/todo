@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"todo/common"
 
 	"github.com/alexedwards/argon2id"
 )
@@ -59,7 +60,7 @@ func hashPassword(password string) string {
 func main() {
 	data := RequestItems{
 		UsersTable: []WriteRequest{
-			{PutRequest: getPutRequest("test-user-1", hashPassword("password"))},
+			{PutRequest: getPutRequest(common.TEST_USER_1_ID, hashPassword(common.TEST_USER_1_PASSWORD))},
 		},
 	}
 

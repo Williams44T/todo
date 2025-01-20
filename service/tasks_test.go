@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"testing"
 	"time"
+	"todo/common"
 	"todo/dynamodb"
 	ddbMock "todo/dynamodb/mock"
 	proto "todo/proto/gen/service"
@@ -39,7 +40,7 @@ func Test_todoServer_AddTask(t *testing.T) {
 				jwt: &tmMock.MockTokenManager{},
 			},
 			args: args{
-				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(USERID_METADATA_KEY, "test_user")),
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
 				req: &proto.AddTaskReq{
 					Title:       "do something",
 					Description: "do something with extra steps",
@@ -75,7 +76,7 @@ func Test_todoServer_AddTask(t *testing.T) {
 				jwt: &tmMock.MockTokenManager{},
 			},
 			args: args{
-				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(USERID_METADATA_KEY, "test_user")),
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
 				req: &proto.AddTaskReq{
 					Description: "do something with extra steps",
 					Tags:        []string{"tag1", "tag2"},
@@ -94,7 +95,7 @@ func Test_todoServer_AddTask(t *testing.T) {
 				jwt: &tmMock.MockTokenManager{},
 			},
 			args: args{
-				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(USERID_METADATA_KEY, "test_user")),
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
 				req: &proto.AddTaskReq{
 					Title:       "do something",
 					Description: "do something with extra steps",
@@ -197,7 +198,7 @@ func Test_todoServer_GetTask(t *testing.T) {
 					TasksTable: map[string]dynamodb.Task{
 						"task_id": {
 							ID:     "task_id",
-							UserID: "test_user_1",
+							UserID: common.TEST_USER_1_ID,
 							Title:  "task title",
 							Status: proto.Status_INCOMPLETE.String(),
 						},
@@ -206,7 +207,7 @@ func Test_todoServer_GetTask(t *testing.T) {
 				jwt: &tmMock.MockTokenManager{},
 			},
 			args: args{
-				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(USERID_METADATA_KEY, "test_user_1")),
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
 				req: &proto.GetTaskReq{
 					Id: "task_id",
 				},
@@ -227,7 +228,7 @@ func Test_todoServer_GetTask(t *testing.T) {
 					TasksTable: map[string]dynamodb.Task{
 						"task_id": {
 							ID:     "task_id",
-							UserID: "test_user_1",
+							UserID: common.TEST_USER_1_ID,
 							Title:  "task title",
 							Status: proto.Status_INCOMPLETE.String(),
 						},
@@ -251,7 +252,7 @@ func Test_todoServer_GetTask(t *testing.T) {
 					TasksTable: map[string]dynamodb.Task{
 						"task_id": {
 							ID:     "task_id",
-							UserID: "test_user_2",
+							UserID: "wrong_user_id",
 							Title:  "task title",
 							Status: proto.Status_INCOMPLETE.String(),
 						},
@@ -260,7 +261,7 @@ func Test_todoServer_GetTask(t *testing.T) {
 				jwt: &tmMock.MockTokenManager{},
 			},
 			args: args{
-				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(USERID_METADATA_KEY, "test_user_1")),
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
 				req: &proto.GetTaskReq{
 					Id: "task_id",
 				},

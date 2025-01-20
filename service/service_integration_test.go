@@ -7,6 +7,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"todo/common"
 	"todo/dynamodb"
 	proto "todo/proto/gen/service"
 	"todo/service/token_manager"
@@ -45,9 +46,9 @@ func Test_Integration_todoServer_Signup(t *testing.T) {
 			}
 
 			// get token manager
-			jwtSecret, ok := os.LookupEnv(JWT_SECRET_ENV_KEY)
+			jwtSecret, ok := os.LookupEnv(common.JWT_SECRET_ENV_VAR)
 			if !ok {
-				t.Errorf("%s must be provided as an environment variable", JWT_SECRET_ENV_KEY)
+				t.Errorf("%s must be provided as an environment variable", common.JWT_SECRET_ENV_VAR)
 			}
 			tokenManager, err := token_manager.NewTokenManager(jwtSecret)
 			if err != nil {
@@ -99,9 +100,9 @@ func Test_Integration_todoServer_Signin(t *testing.T) {
 			}
 
 			// get token manager
-			jwtSecret, ok := os.LookupEnv(JWT_SECRET_ENV_KEY)
+			jwtSecret, ok := os.LookupEnv(common.JWT_SECRET_ENV_VAR)
 			if !ok {
-				t.Errorf("%s must be provided as an environment variable", JWT_SECRET_ENV_KEY)
+				t.Errorf("%s must be provided as an environment variable", common.JWT_SECRET_ENV_VAR)
 			}
 			tokenManager, err := token_manager.NewTokenManager(jwtSecret)
 			if err != nil {

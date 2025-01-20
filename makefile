@@ -1,5 +1,5 @@
 proto-gen:
-	protoc --go_out=./proto/ --go-grpc_out=./proto/ ./proto/service.proto
+	protoc --go_out=./proto/ --go-grpc_out=./proto/ --proto_path=./proto ./proto/*.proto
 
 server:
 	go run ./cmd/service/service.go &

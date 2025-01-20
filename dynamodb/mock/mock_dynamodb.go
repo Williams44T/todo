@@ -9,6 +9,7 @@ import (
 type MockDynamoDBClient struct {
 	// Tables
 	UsersTable map[string]dynamodb.User
+	TasksTable map[string]dynamodb.Task
 
 	// Users
 	AddUserErr    error
@@ -67,7 +68,14 @@ func (mdb *MockDynamoDBClient) DeleteUser(ctx context.Context, req *dynamodb.Del
 }
 
 func (mdb *MockDynamoDBClient) AddTask(ctx context.Context, req *dynamodb.AddTaskReq) (*dynamodb.AddTaskResp, error) {
-	return nil, errors.New("not implemented")
+	if mdb.AddTaskErr != nil {
+		return nil, mdb.AddTaskErr
+	}
+	if mdb.TasksTable == nil {
+		mdb.TasksTable = make(map[string]dynamodb.Task)
+	}
+	mdb.TasksTable[req.Task.ID] = req.Task
+	return &dynamodb.AddTaskResp{}, nil
 }
 
 func (mdb *MockDynamoDBClient) GetTask(ctx context.Context, req *dynamodb.GetTaskReq) (*dynamodb.GetTaskResp, error) {

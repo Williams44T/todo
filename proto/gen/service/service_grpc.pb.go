@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.2
-// source: proto/service.proto
+// source: service.proto
 
 package service
 
@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Todo_Signup_FullMethodName  = "/service.Todo/Signup"
 	Todo_Signin_FullMethodName  = "/service.Todo/Signin"
-	Todo_GetTodo_FullMethodName = "/service.Todo/GetTodo"
+	Todo_AddTask_FullMethodName = "/service.Todo/AddTask"
 )
 
 // TodoClient is the client API for Todo service.
@@ -30,7 +30,7 @@ const (
 type TodoClient interface {
 	Signup(ctx context.Context, in *SignupReq, opts ...grpc.CallOption) (*SignupResp, error)
 	Signin(ctx context.Context, in *SigninReq, opts ...grpc.CallOption) (*SigninResp, error)
-	GetTodo(ctx context.Context, in *GetTodoReq, opts ...grpc.CallOption) (*GetTodoResp, error)
+	AddTask(ctx context.Context, in *AddTaskReq, opts ...grpc.CallOption) (*AddTaskResp, error)
 }
 
 type todoClient struct {
@@ -61,10 +61,10 @@ func (c *todoClient) Signin(ctx context.Context, in *SigninReq, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *todoClient) GetTodo(ctx context.Context, in *GetTodoReq, opts ...grpc.CallOption) (*GetTodoResp, error) {
+func (c *todoClient) AddTask(ctx context.Context, in *AddTaskReq, opts ...grpc.CallOption) (*AddTaskResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTodoResp)
-	err := c.cc.Invoke(ctx, Todo_GetTodo_FullMethodName, in, out, cOpts...)
+	out := new(AddTaskResp)
+	err := c.cc.Invoke(ctx, Todo_AddTask_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (c *todoClient) GetTodo(ctx context.Context, in *GetTodoReq, opts ...grpc.C
 type TodoServer interface {
 	Signup(context.Context, *SignupReq) (*SignupResp, error)
 	Signin(context.Context, *SigninReq) (*SigninResp, error)
-	GetTodo(context.Context, *GetTodoReq) (*GetTodoResp, error)
+	AddTask(context.Context, *AddTaskReq) (*AddTaskResp, error)
 	mustEmbedUnimplementedTodoServer()
 }
 
@@ -94,8 +94,8 @@ func (UnimplementedTodoServer) Signup(context.Context, *SignupReq) (*SignupResp,
 func (UnimplementedTodoServer) Signin(context.Context, *SigninReq) (*SigninResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Signin not implemented")
 }
-func (UnimplementedTodoServer) GetTodo(context.Context, *GetTodoReq) (*GetTodoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTodo not implemented")
+func (UnimplementedTodoServer) AddTask(context.Context, *AddTaskReq) (*AddTaskResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddTask not implemented")
 }
 func (UnimplementedTodoServer) mustEmbedUnimplementedTodoServer() {}
 func (UnimplementedTodoServer) testEmbeddedByValue()              {}
@@ -154,20 +154,20 @@ func _Todo_Signin_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Todo_GetTodo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTodoReq)
+func _Todo_AddTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddTaskReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TodoServer).GetTodo(ctx, in)
+		return srv.(TodoServer).AddTask(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Todo_GetTodo_FullMethodName,
+		FullMethod: Todo_AddTask_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TodoServer).GetTodo(ctx, req.(*GetTodoReq))
+		return srv.(TodoServer).AddTask(ctx, req.(*AddTaskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -188,10 +188,10 @@ var Todo_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Todo_Signin_Handler,
 		},
 		{
-			MethodName: "GetTodo",
-			Handler:    _Todo_GetTodo_Handler,
+			MethodName: "AddTask",
+			Handler:    _Todo_AddTask_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/service.proto",
+	Metadata: "service.proto",
 }

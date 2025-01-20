@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"log"
 	"todo/cli/interceptor"
 	proto "todo/proto/gen/service"
@@ -28,12 +26,5 @@ func main() {
 		log.Fatalf("failed to create client conn: %s", err)
 	}
 	defer conn.Close()
-	client := proto.NewTodoClient(conn)
-
-	// GetTodo
-	resp, err := client.GetTodo(context.Background(), &proto.GetTodoReq{})
-	if err != nil {
-		log.Fatalf("failed to GetTodo: %v", err)
-	}
-	fmt.Print(resp)
+	_ = proto.NewTodoClient(conn)
 }

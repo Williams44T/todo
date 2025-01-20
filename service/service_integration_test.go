@@ -84,7 +84,7 @@ func Test_Integration_todoServer_Signin(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &proto.SigninReq{
-					UserID:   "test-user-1",
+					UserID:   common.TEST_USER_1_ID,
 					Password: "password",
 				},
 			},

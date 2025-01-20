@@ -4,7 +4,7 @@ import (
 	"os/exec"
 	"testing"
 	"time"
-	"todo/cli/interceptor"
+	"todo/common"
 
 	"github.com/golang-jwt/jwt"
 )
@@ -13,16 +13,16 @@ const todoCliPath = "../todo-cli"
 
 func setAccessJWT(t *testing.T) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": "test-user",
+		"sub": common.TEST_USER_1_ID,
 		"exp": time.Now().Add(time.Duration(time.Minute * 5)).Unix(),
 	})
 
-	signed, err := token.SignedString([]byte("jwt_secret"))
+	signed, err := token.SignedString([]byte(common.JWT_TEST_SECRET))
 	if err != nil {
 		t.Errorf("failed to sign JWT: %v", err)
 	}
 
-	t.Setenv(interceptor.ACCESS_JWT_ENV_VAR, signed)
+	t.Setenv(common.ACCESS_JWT_ENV_VAR, signed)
 }
 
 func Test_CLI_Integration(t *testing.T) {

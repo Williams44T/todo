@@ -5,16 +5,13 @@ import (
 	"errors"
 	"fmt"
 
+	"todo/common"
 	"todo/dynamodb"
 	proto "todo/proto/gen/service"
 
 	"github.com/adhocore/gronx"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/metadata"
-)
-
-const (
-	USERID_METADATA_KEY = "user_id"
 )
 
 func validateRecurringRule(rule *proto.RecurringRule) error {
@@ -37,7 +34,7 @@ func (t *todoServer) AddTask(ctx context.Context, req *proto.AddTaskReq) (*proto
 	}
 
 	// get userid from ctx
-	userIDs := metadata.ValueFromIncomingContext(ctx, USERID_METADATA_KEY)
+	userIDs := metadata.ValueFromIncomingContext(ctx, common.USERID_METADATA_KEY)
 	if len(userIDs) == 0 {
 		return nil, fmt.Errorf("user id is not provided in metadata")
 	}
@@ -75,7 +72,7 @@ func (t *todoServer) GetTask(ctx context.Context, req *proto.GetTaskReq) (*proto
 	}
 
 	// get userid from ctx
-	userIDs := metadata.ValueFromIncomingContext(ctx, USERID_METADATA_KEY)
+	userIDs := metadata.ValueFromIncomingContext(ctx, common.USERID_METADATA_KEY)
 	if len(userIDs) == 0 {
 		return nil, fmt.Errorf("user id is not provided in metadata")
 	}

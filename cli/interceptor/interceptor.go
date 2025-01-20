@@ -3,13 +3,10 @@ package interceptor
 import (
 	"context"
 	"os"
+	"todo/common"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-)
-
-const (
-	ACCESS_JWT_ENV_VAR = "TODO_SERVICE_ACCESS_JWT"
 )
 
 // Interceptor holds all the interceptor logic for the CLI
@@ -30,6 +27,6 @@ func (i *Interceptor) UnaryAuthMiddleware(
 	invoker grpc.UnaryInvoker,
 	opts ...grpc.CallOption,
 ) error {
-	ctx = metadata.AppendToOutgoingContext(ctx, "authorization", os.Getenv(ACCESS_JWT_ENV_VAR))
+	ctx = metadata.AppendToOutgoingContext(ctx, "authorization", os.Getenv(common.ACCESS_JWT_ENV_VAR))
 	return invoker(ctx, method, req, reply, cc, opts...)
 }

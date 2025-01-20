@@ -7,6 +7,7 @@ import (
 	"context"
 	"testing"
 	"time"
+	"todo/common"
 	"todo/dynamodb"
 	proto "todo/proto/gen/service"
 
@@ -26,7 +27,7 @@ func Test_Integration_todoServer_AddTask(t *testing.T) {
 		{
 			name: "happy path",
 			args: args{
-				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(USERID_METADATA_KEY, "test-user-1")),
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
 				req: &proto.AddTaskReq{
 					Title:       "do something",
 					Description: "do something with extra steps",

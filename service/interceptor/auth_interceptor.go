@@ -2,17 +2,12 @@ package interceptor
 
 import (
 	"context"
+	"todo/common"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-)
-
-const (
-	AUTHORIZATION_METADATA_KEY = "authorization"
-	USERID_METADATA_KEY        = "user_id"
-	JWT_METADATA_KEY           = "jwt"
 )
 
 // UnaryAuthMiddleware authenticates JWTs.
@@ -31,7 +26,7 @@ func (i *Interceptor) UnaryAuthMiddleware(
 	if !ok {
 		return nil, status.Error(codes.Unauthenticated, "metadata was not provided")
 	}
-	tokens := md.Get(AUTHORIZATION_METADATA_KEY)
+	tokens := md.Get(common.AUTHORIZATION_METADATA_KEY)
 	if len(tokens) == 0 {
 		return nil, status.Error(codes.Unauthenticated, "authorization token is not provided in metadata")
 	}
@@ -46,7 +41,7 @@ func (i *Interceptor) UnaryAuthMiddleware(
 		if err != nil {
 			return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)
 		}
-		md.Append(USERID_METADATA_KEY, userID)
+		md.Append(common.USERID_METADATA_KEY, userID)
 		ctx = metadata.NewIncomingContext(ctx, md)
 	}
 
@@ -57,7 +52,7 @@ func (i *Interceptor) UnaryAuthMiddleware(
 	}
 
 	// get user id from metadata
-	userIDs := md.Get(USERID_METADATA_KEY)
+	userIDs := md.Get(common.USERID_METADATA_KEY)
 	if len(userIDs) == 0 {
 		return nil, status.Error(codes.Unauthenticated, "user id is not provided in metadata")
 	}
@@ -67,7 +62,7 @@ func (i *Interceptor) UnaryAuthMiddleware(
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "failed to issue jwt: %v", err)
 	}
-	err = grpc.SetHeader(ctx, metadata.Pairs(JWT_METADATA_KEY, jwt))
+	err = grpc.SetHeader(ctx, metadata.Pairs(common.JWT_METADATA_KEY, jwt))
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "failed to set jwt into header: %v", err)
 	}

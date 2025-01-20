@@ -5,16 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"todo/common"
 	"todo/dynamodb"
 	proto "todo/proto/gen/service"
 	"todo/service/token_manager"
 
 	"github.com/alexedwards/argon2id"
 	"github.com/google/uuid"
-)
-
-const (
-	JWT_SECRET_ENV_KEY = "JWT_SECRET"
 )
 
 type todoServer struct {
@@ -31,9 +28,9 @@ func NewTodoServer(ctx context.Context) (*todoServer, error) {
 	}
 
 	// get token manager
-	jwtSecret, ok := os.LookupEnv(JWT_SECRET_ENV_KEY)
+	jwtSecret, ok := os.LookupEnv(common.JWT_SECRET_ENV_VAR)
 	if !ok {
-		return nil, fmt.Errorf("%s must be provided as an environment variable", JWT_SECRET_ENV_KEY)
+		return nil, fmt.Errorf("%s must be provided as an environment variable", common.JWT_SECRET_ENV_VAR)
 	}
 	tokenManager, err := token_manager.NewTokenManager(jwtSecret)
 	if err != nil {

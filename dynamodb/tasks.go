@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 type RecurringRule struct {
@@ -55,19 +56,18 @@ type GetTaskResp struct {
 }
 
 func (ddb *DynamoDBClient) GetTask(ctx context.Context, req *GetTaskReq) (*GetTaskResp, error) {
-	key, err := attributevalue.MarshalMap(req.ID)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal task ID: %v", err)
-	}
 	getItemResp, err := ddb.client.GetItem(ctx, &dynamodb.GetItemInput{
 		TableName: &ddb.tasksTableName,
-		Key:       key,
+		Key: map[string]types.AttributeValue{
+			"id": &types.AttributeValueMemberS{Value: req.ID},
+		},
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to get task: %v", err)
 	}
 	var task *Task
 	if getItemResp.Item != nil {
+		task = &Task{}
 		err = attributevalue.UnmarshalMap(getItemResp.Item, task)
 		if err != nil {
 			return nil, fmt.Errorf("failed to unmarshal task: %v", err)

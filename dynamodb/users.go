@@ -49,11 +49,6 @@ type GetUserResp struct {
 // GetUser uses the given user id to find a user.
 // User will be nil if no user is found.
 func (ddb *DynamoDBClient) GetUser(ctx context.Context, req *GetUserReq) (*GetUserResp, error) {
-	key, err := attributevalue.MarshalMap(req.ID)
-	fmt.Println(key)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal user ID: %v", err)
-	}
 	getItemResp, err := ddb.client.GetItem(ctx, &dynamodb.GetItemInput{
 		TableName: &ddb.usersTableName,
 		Key: map[string]types.AttributeValue{
@@ -65,6 +60,7 @@ func (ddb *DynamoDBClient) GetUser(ctx context.Context, req *GetUserReq) (*GetUs
 	}
 	var user *User
 	if getItemResp.Item != nil {
+		user = &User{}
 		err = attributevalue.UnmarshalMap(getItemResp.Item, user)
 		if err != nil {
 			return nil, fmt.Errorf("failed to unmarshal user: %v", err)

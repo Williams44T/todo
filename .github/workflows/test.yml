@@ -59,4 +59,4 @@ jobs:
       - name: Test code
         run: |
           make build-cli
-          go test -v ./...
+          make test-all

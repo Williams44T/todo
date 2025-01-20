@@ -79,7 +79,16 @@ func (mdb *MockDynamoDBClient) AddTask(ctx context.Context, req *dynamodb.AddTas
 }
 
 func (mdb *MockDynamoDBClient) GetTask(ctx context.Context, req *dynamodb.GetTaskReq) (*dynamodb.GetTaskResp, error) {
-	return nil, errors.New("not implemented")
+	if mdb.GetTaskErr != nil {
+		return nil, mdb.GetTaskErr
+	}
+	if mdb.TasksTable == nil {
+		return nil, errors.New("tasksTable does not exist")
+	}
+	task := mdb.TasksTable[req.ID]
+	return &dynamodb.GetTaskResp{
+		Task: &task,
+	}, nil
 }
 
 func (mdb *MockDynamoDBClient) BatchGetTask(ctx context.Context, req *dynamodb.BatchGetTaskReq) (*dynamodb.BatchGetTaskResp, error) {

@@ -9,6 +9,8 @@ import (
 	"time"
 	"todo/dynamodb"
 	proto "todo/proto/gen/service"
+
+	"google.golang.org/grpc/metadata"
 )
 
 func Test_Integration_todoServer_AddTask(t *testing.T) {
@@ -24,7 +26,7 @@ func Test_Integration_todoServer_AddTask(t *testing.T) {
 		{
 			name: "happy path",
 			args: args{
-				ctx: context.Background(),
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(USERID_METADATA_KEY, "test-user-1")),
 				req: &proto.AddTaskReq{
 					Title:       "do something",
 					Description: "do something with extra steps",

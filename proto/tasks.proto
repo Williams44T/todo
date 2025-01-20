@@ -47,3 +47,11 @@ message AddTaskReq {
 
 message AddTaskResp {
 }
+
+message GetTaskReq {
+    string id = 1;
+}
+
+message GetTaskResp {
+    Task Task = 1;
+}

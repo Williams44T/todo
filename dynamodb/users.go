@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 type User struct {
@@ -48,19 +49,18 @@ type GetUserResp struct {
 // GetUser uses the given user id to find a user.
 // User will be nil if no user is found.
 func (ddb *DynamoDBClient) GetUser(ctx context.Context, req *GetUserReq) (*GetUserResp, error) {
-	key, err := attributevalue.MarshalMap(req.ID)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal user ID: %v", err)
-	}
 	getItemResp, err := ddb.client.GetItem(ctx, &dynamodb.GetItemInput{
 		TableName: &ddb.usersTableName,
-		Key:       key,
+		Key: map[string]types.AttributeValue{
+			"id": &types.AttributeValueMemberS{Value: req.ID},
+		},
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to get user: %v", err)
 	}
 	var user *User
 	if getItemResp.Item != nil {
+		user = &User{}
 		err = attributevalue.UnmarshalMap(getItemResp.Item, user)
 		if err != nil {
 			return nil, fmt.Errorf("failed to unmarshal user: %v", err)

@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 type RecurringRule struct {
@@ -16,15 +17,15 @@ type RecurringRule struct {
 }
 
 type Task struct {
-	ID            string        `dynamodbav:"id"`
-	UserID        string        `dynamodbav:"user_id"`
-	Title         string        `dynamodbav:"title"`
-	Description   string        `dynamodbav:"description"`
-	Status        string        `dynamodbav:"status"`
-	Tags          []string      `dynamodbav:"tags"`
-	Parents       []string      `dynamodbav:"parents"`
-	DueDate       int64         `dynamodbav:"due_date"`
-	RecurringRule RecurringRule `dynamodbav:"recurring_rule"`
+	ID            string         `dynamodbav:"id"`
+	UserID        string         `dynamodbav:"user_id"`
+	Title         string         `dynamodbav:"title"`
+	Description   string         `dynamodbav:"description"`
+	Status        string         `dynamodbav:"status"`
+	Tags          []string       `dynamodbav:"tags"`
+	Parents       []string       `dynamodbav:"parents"`
+	DueDate       int64          `dynamodbav:"due_date"`
+	RecurringRule *RecurringRule `dynamodbav:"recurring_rule"`
 }
 
 type AddTaskReq struct {
@@ -42,16 +43,39 @@ func (ddb *DynamoDBClient) AddTask(ctx context.Context, req *AddTaskReq) (*AddTa
 		Item:      item,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to put user into users table: %v", err)
+		return nil, fmt.Errorf("failed to put task into tasks table: %v", err)
 	}
 	return &AddTaskResp{}, nil
 }
 
-type GetTaskReq struct{}
-type GetTaskResp struct{}
+type GetTaskReq struct {
+	ID string `dynamodbav:"id"`
+}
+type GetTaskResp struct {
+	Task *Task
+}
 
 func (ddb *DynamoDBClient) GetTask(ctx context.Context, req *GetTaskReq) (*GetTaskResp, error) {
-	return nil, errors.New("not implemented yet")
+	getItemResp, err := ddb.client.GetItem(ctx, &dynamodb.GetItemInput{
+		TableName: &ddb.tasksTableName,
+		Key: map[string]types.AttributeValue{
+			"id": &types.AttributeValueMemberS{Value: req.ID},
+		},
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get task: %v", err)
+	}
+	var task *Task
+	if getItemResp.Item != nil {
+		task = &Task{}
+		err = attributevalue.UnmarshalMap(getItemResp.Item, task)
+		if err != nil {
+			return nil, fmt.Errorf("failed to unmarshal task: %v", err)
+		}
+	}
+	return &GetTaskResp{
+		Task: task,
+	}, nil
 }
 
 type BatchGetTaskReq struct{}

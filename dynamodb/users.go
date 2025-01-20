@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 type User struct {
@@ -55,7 +56,9 @@ func (ddb *DynamoDBClient) GetUser(ctx context.Context, req *GetUserReq) (*GetUs
 	}
 	getItemResp, err := ddb.client.GetItem(ctx, &dynamodb.GetItemInput{
 		TableName: &ddb.usersTableName,
-		Key:       key,
+		Key: map[string]types.AttributeValue{
+			"id": &types.AttributeValueMemberS{Value: req.ID},
+		},
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to get user: %v", err)

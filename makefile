@@ -4,12 +4,10 @@ proto-gen:
 server:
 	go run ./cmd/service/service.go &
 
-test-all: test test-integration
-
 test:
 	go test -v ./...
 
-test-integration:
+test-all:
 	go test -v -tags integration ./...
 
 build-cli:

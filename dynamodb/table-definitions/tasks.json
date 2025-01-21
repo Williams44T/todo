@@ -2,7 +2,7 @@
     "TableName": "todo-tasks",
     "KeySchema": [
       { "AttributeName": "user_id", "KeyType": "HASH" },
-      { "AttributeName": "task_id", "KeyTpe": "RANGE" }
+      { "AttributeName": "task_id", "KeyType": "RANGE" }
     ],
     "AttributeDefinitions": [
       { "AttributeName": "user_id", "AttributeType": "S" },

@@ -2,7 +2,7 @@
   "TableName": "todo-events",
   "KeySchema": [
     { "AttributeName": "user_id", "KeyType": "HASH" },
-    { "AttributeName": "event_id", "KeyTpe": "RANGE" }
+    { "AttributeName": "event_id", "KeyType": "RANGE" }
   ],
   "AttributeDefinitions": [
     { "AttributeName": "user_id", "AttributeType": "S" },

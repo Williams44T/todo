@@ -15,33 +15,58 @@ import (
 
 // https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_BatchWriteItem.html
 type ID struct {
-	S string `json:"S"`
+	S string `json:"S,omitempty"`
 }
 type HashedPassword struct {
-	S string `json:"S"`
+	S string `json:"S,omitempty"`
+}
+type UserID struct {
+	S string `json:"S,omitempty"`
+}
+type TaskID struct {
+	S string `json:"S,omitempty"`
 }
 type Item struct {
-	ID             ID             `json:"id"`
-	HashedPassword HashedPassword `json:"hashed_password"`
+	// user fields
+	ID             *ID             `json:"id,omitempty"`
+	HashedPassword *HashedPassword `json:"hashed_password,omitempty"`
+
+	// task fields
+	UserID *UserID `json:"user_id,omitempty"`
+	TaskID *TaskID `json:"task_id,omitempty"`
 }
 type PutRequest struct {
-	Item Item `json:"Item"`
+	Item *Item `json:"Item,omitempty"`
 }
 type WriteRequest struct {
-	PutRequest PutRequest `json:"PutRequest"`
+	PutRequest *PutRequest `json:"PutRequest,omitempty"`
 }
 type RequestItems struct {
-	UsersTable []WriteRequest `json:"todo-users"`
+	UsersTable []*WriteRequest `json:"todo-users,omitempty"`
+	TasksTable []*WriteRequest `json:"todo-tasks,omitempty"`
 }
 
-func getPutRequest(id string, hashedPassword string) PutRequest {
-	return PutRequest{
-		Item: Item{
-			ID: ID{
+func getPutUserRequest(id, hashedPassword string) *PutRequest {
+	return &PutRequest{
+		Item: &Item{
+			ID: &ID{
 				S: id,
 			},
-			HashedPassword: HashedPassword{
+			HashedPassword: &HashedPassword{
 				S: hashedPassword,
+			},
+		},
+	}
+}
+
+func getPutTaskRequest(userID, taskID string) *PutRequest {
+	return &PutRequest{
+		Item: &Item{
+			UserID: &UserID{
+				S: userID,
+			},
+			TaskID: &TaskID{
+				S: taskID,
 			},
 		},
 	}
@@ -59,8 +84,11 @@ func hashPassword(password string) string {
 
 func main() {
 	data := RequestItems{
-		UsersTable: []WriteRequest{
-			{PutRequest: getPutRequest(common.TEST_USER_1_ID, hashPassword(common.TEST_USER_1_PASSWORD))},
+		UsersTable: []*WriteRequest{
+			{PutRequest: getPutUserRequest(common.TEST_USER_1_ID, hashPassword(common.TEST_USER_1_PASSWORD))},
+		},
+		TasksTable: []*WriteRequest{
+			{PutRequest: getPutTaskRequest(common.TEST_USER_1_ID, common.TASK_1_ID)},
 		},
 	}
 

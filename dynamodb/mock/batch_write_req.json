@@ -3,11 +3,25 @@
     {
       "PutRequest": {
         "Item": {
-          "ID": {
-            "S": "test-user-1"
+          "id": {
+            "S": "test_user_1"
           },
-          "HashedPassword": {
-            "S": "$argon2id$v=19$m=65536,t=1,p=8$AUNtwmbFXZfMLP6vEH0uuQ$NrGAajVW7POoyDROin12up25WowkpygB7HEtkZxZhIU"
+          "hashed_password": {
+            "S": "$argon2id$v=19$m=65536,t=1,p=8$g3CUrAypb5NaLuEg4LYxhA$2BmAEOV56h+aRJnHuIU1iwoROwGQ7xV0UpzGnQmKsKo"
+          }
+        }
+      }
+    }
+  ],
+  "todo-tasks": [
+    {
+      "PutRequest": {
+        "Item": {
+          "user_id": {
+            "S": "test_user_1"
+          },
+          "task_id": {
+            "S": "task_1"
           }
         }
       }

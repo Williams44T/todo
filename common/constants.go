@@ -11,7 +11,10 @@ const (
 	JWT_METADATA_KEY           = "jwt"
 
 	// testing
-	JWT_TEST_SECRET      = "jwt_secret"
+	JWT_TEST_SECRET = "jwt_secret"
+
 	TEST_USER_1_ID       = "test_user_1"
 	TEST_USER_1_PASSWORD = "password"
+
+	TASK_1_ID = "task_1"
 )

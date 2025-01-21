@@ -197,8 +197,8 @@ func Test_todoServer_GetTask(t *testing.T) {
 				ddb: &ddbMock.MockDynamoDBClient{
 					TasksTable: map[string]dynamodb.Task{
 						"task_id": {
-							ID:     "task_id",
 							UserID: common.TEST_USER_1_ID,
+							TaskID: "task_id",
 							Title:  "task title",
 							Status: proto.Status_INCOMPLETE.String(),
 						},
@@ -227,8 +227,8 @@ func Test_todoServer_GetTask(t *testing.T) {
 				ddb: &ddbMock.MockDynamoDBClient{
 					TasksTable: map[string]dynamodb.Task{
 						"task_id": {
-							ID:     "task_id",
 							UserID: common.TEST_USER_1_ID,
+							TaskID: "task_id",
 							Title:  "task title",
 							Status: proto.Status_INCOMPLETE.String(),
 						},
@@ -251,8 +251,8 @@ func Test_todoServer_GetTask(t *testing.T) {
 				ddb: &ddbMock.MockDynamoDBClient{
 					TasksTable: map[string]dynamodb.Task{
 						"task_id": {
-							ID:     "task_id",
 							UserID: "wrong_user_id",
+							TaskID: "task_id",
 							Title:  "task title",
 							Status: proto.Status_INCOMPLETE.String(),
 						},

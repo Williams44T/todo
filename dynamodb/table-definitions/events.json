@@ -1,13 +1,15 @@
 {
-    "TableName": "todo-events",
-    "KeySchema": [
-      { "AttributeName": "id", "KeyType": "HASH" }
-    ],
-    "AttributeDefinitions": [
-      { "AttributeName": "id", "AttributeType": "S" }
-    ],
-    "ProvisionedThroughput": {
-      "ReadCapacityUnits": 5,
-      "WriteCapacityUnits": 5
-    }
+  "TableName": "todo-events",
+  "KeySchema": [
+    { "AttributeName": "user_id", "KeyType": "HASH" },
+    { "AttributeName": "event_id", "KeyType": "RANGE" }
+  ],
+  "AttributeDefinitions": [
+    { "AttributeName": "user_id", "AttributeType": "S" },
+    { "AttributeName": "event_id", "AttributeType": "S" }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 5,
+    "WriteCapacityUnits": 5
+  }
 }

@@ -1,10 +1,12 @@
 {
     "TableName": "todo-tasks",
     "KeySchema": [
-      { "AttributeName": "id", "KeyType": "HASH" }
+      { "AttributeName": "user_id", "KeyType": "HASH" },
+      { "AttributeName": "task_id", "KeyTpe": "RANGE" }
     ],
     "AttributeDefinitions": [
-      { "AttributeName": "id", "AttributeType": "S" }
+      { "AttributeName": "user_id", "AttributeType": "S" },
+      { "AttributeName": "task_id", "AttributeType": "S" }
     ],
     "ProvisionedThroughput": {
       "ReadCapacityUnits": 5,

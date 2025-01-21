@@ -17,8 +17,8 @@ type RecurringRule struct {
 }
 
 type Task struct {
-	ID            string         `dynamodbav:"id"`
 	UserID        string         `dynamodbav:"user_id"`
+	TaskID        string         `dynamodbav:"task_id"`
 	Title         string         `dynamodbav:"title"`
 	Description   string         `dynamodbav:"description"`
 	Status        string         `dynamodbav:"status"`
@@ -49,7 +49,8 @@ func (ddb *DynamoDBClient) AddTask(ctx context.Context, req *AddTaskReq) (*AddTa
 }
 
 type GetTaskReq struct {
-	ID string `dynamodbav:"id"`
+	UserID string
+	TaskID string
 }
 type GetTaskResp struct {
 	Task *Task
@@ -59,7 +60,8 @@ func (ddb *DynamoDBClient) GetTask(ctx context.Context, req *GetTaskReq) (*GetTa
 	getItemResp, err := ddb.client.GetItem(ctx, &dynamodb.GetItemInput{
 		TableName: &ddb.tasksTableName,
 		Key: map[string]types.AttributeValue{
-			"id": &types.AttributeValueMemberS{Value: req.ID},
+			"user_id": &types.AttributeValueMemberS{Value: req.UserID},
+			"task_id": &types.AttributeValueMemberS{Value: req.TaskID},
 		},
 	})
 	if err != nil {

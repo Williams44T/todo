@@ -48,8 +48,8 @@ func (t *todoServer) AddTask(ctx context.Context, req *proto.AddTaskReq) (*proto
 	}
 	_, err := t.ddb.AddTask(ctx, &dynamodb.AddTaskReq{
 		Task: dynamodb.Task{
-			ID:            uuid.New().String(),
 			UserID:        userIDs[0],
+			TaskID:        uuid.New().String(),
 			Title:         req.Title,
 			Description:   req.Description,
 			Status:        req.Status.String(),
@@ -79,7 +79,8 @@ func (t *todoServer) GetTask(ctx context.Context, req *proto.GetTaskReq) (*proto
 
 	// get task
 	getTaskResp, err := t.ddb.GetTask(ctx, &dynamodb.GetTaskReq{
-		ID: req.Id,
+		UserID: userIDs[0],
+		TaskID: req.Id,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to get task: %v", err)
@@ -91,11 +92,6 @@ func (t *todoServer) GetTask(ctx context.Context, req *proto.GetTaskReq) (*proto
 	// simplify
 	ddbTask := getTaskResp.Task
 
-	// compare user ids
-	if ddbTask.UserID != userIDs[0] {
-		return nil, errors.New("user is not authorized to read this task")
-	}
-
 	// form and send response
 	var recurringRule *proto.RecurringRule
 	if ddbTask.RecurringRule != nil {
@@ -106,7 +102,7 @@ func (t *todoServer) GetTask(ctx context.Context, req *proto.GetTaskReq) (*proto
 	}
 	return &proto.GetTaskResp{
 		Task: &proto.Task{
-			Id:            ddbTask.ID,
+			Id:            ddbTask.TaskID,
 			Title:         ddbTask.Title,
 			Description:   ddbTask.Description,
 			Status:        proto.Status(proto.Status_value[ddbTask.Status]),

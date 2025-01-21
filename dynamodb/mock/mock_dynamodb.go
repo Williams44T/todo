@@ -74,7 +74,7 @@ func (mdb *MockDynamoDBClient) AddTask(ctx context.Context, req *dynamodb.AddTas
 	if mdb.TasksTable == nil {
 		mdb.TasksTable = make(map[string]dynamodb.Task)
 	}
-	mdb.TasksTable[req.Task.ID] = req.Task
+	mdb.TasksTable[req.Task.TaskID] = req.Task
 	return &dynamodb.AddTaskResp{}, nil
 }
 
@@ -85,7 +85,10 @@ func (mdb *MockDynamoDBClient) GetTask(ctx context.Context, req *dynamodb.GetTas
 	if mdb.TasksTable == nil {
 		return nil, errors.New("tasksTable does not exist")
 	}
-	task := mdb.TasksTable[req.ID]
+	task := mdb.TasksTable[req.TaskID]
+	if task.UserID != req.UserID {
+		return nil, errors.New("unauthorized")
+	}
 	return &dynamodb.GetTaskResp{
 		Task: &task,
 	}, nil

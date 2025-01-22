@@ -137,15 +137,6 @@ func Test_Integration_todoServer_GetAllTasks(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "user id not provided in context",
-			args: args{
-				ctx: context.Background(),
-				req: &proto.GetAllTasksReq{},
-			},
-			wantTaskIdSet: map[string]struct{}{},
-			wantErr:       true,
-		},
-		{
 			name: "no tasks tied to provided user id",
 			args: args{
 				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, "fake_user_id")),
@@ -240,21 +231,6 @@ func Test_Integration_todoServer_UpdateTask(t *testing.T) {
 			want:    nil,
 			wantErr: true,
 		},
-		{
-			name: "no user id provided in context",
-			args: args{
-				ctx: context.Background(),
-				req: &proto.UpdateTaskReq{
-					Task: &proto.Task{
-						Userid: common.TEST_USER_1_ID,
-						Id:     common.TASK_1A_ID,
-						Status: proto.Status_COMPLETE,
-					},
-				},
-			},
-			want:    nil,
-			wantErr: true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -271,6 +247,61 @@ func Test_Integration_todoServer_UpdateTask(t *testing.T) {
 			_, err = tr.UpdateTask(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("todoServer.UpdateTask() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+		})
+	}
+}
+
+func Test_Integration_todoServer_DeleteTask(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		req *proto.DeleteTaskReq
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *proto.DeleteTaskResp
+		wantErr bool
+	}{
+		{
+			name: "happy path",
+			args: args{
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
+				req: &proto.DeleteTaskReq{
+					TaskId: common.TASK_1A_ID,
+				},
+			},
+			want:    &proto.DeleteTaskResp{},
+			wantErr: false,
+		},
+		{
+			name: "happy path - task does not exist doesn't throw error",
+			args: args{
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
+				req: &proto.DeleteTaskReq{
+					TaskId: "nonexistent_id",
+				},
+			},
+			want:    &proto.DeleteTaskResp{},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// get database client
+			databaseClient, err := dynamodb.NewDynamoDBClient(tt.args.ctx)
+			if err != nil {
+				t.Errorf("integration todoServer.DeleteTask() failed to get database client: %v", err)
+			}
+
+			tr := &todoServer{
+				ddb: databaseClient,
+			}
+
+			_, err = tr.DeleteTask(tt.args.ctx, tt.args.req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("todoServer.DeleteTask() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 		})

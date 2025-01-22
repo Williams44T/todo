@@ -218,9 +218,22 @@ func (ddb *DynamoDBClient) UpdateTask(ctx context.Context, req *UpdateTaskReq) (
 	}, nil
 }
 
-type DeleteTaskReq struct{}
+type DeleteTaskReq struct {
+	UserID string
+	TaskID string
+}
 type DeleteTaskResp struct{}
 
 func (ddb *DynamoDBClient) DeleteTask(ctx context.Context, req *DeleteTaskReq) (*DeleteTaskResp, error) {
-	return nil, errors.New("not implemented yet")
+	_, err := ddb.client.DeleteItem(ctx, &dynamodb.DeleteItemInput{
+		TableName: &ddb.tasksTableName,
+		Key: map[string]types.AttributeValue{
+			"user_id": &types.AttributeValueMemberS{Value: req.UserID},
+			"task_id": &types.AttributeValueMemberS{Value: req.TaskID},
+		},
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to delete item: %v", err)
+	}
+	return &DeleteTaskResp{}, nil
 }

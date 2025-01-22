@@ -69,3 +69,9 @@ message UpdateTaskReq {
 message UpdateTaskResp {
     Task task = 1;
 }
+
+message DeleteTaskReq {
+    string task_id = 1;
+}
+
+message DeleteTaskResp {}

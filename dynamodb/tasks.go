@@ -154,10 +154,6 @@ type UpdateTaskResp struct {
 func (ddb *DynamoDBClient) UpdateTask(ctx context.Context, req *UpdateTaskReq) (*UpdateTaskResp, error) {
 	update := expression.Set(expression.Name("updated_at"), expression.Value(time.Now().Unix()))
 	for name, value := range req.KVPairs {
-		if value == nil {
-			update.Set(expression.Name(name), expression.Value(value))
-			continue
-		}
 		switch name {
 		case TitleKey, DescriptionKey, StatusKey:
 			if _, ok := value.(string); !ok {

@@ -169,6 +169,12 @@ func (t *todoServer) UpdateTask(ctx context.Context, req *proto.UpdateTaskReq) (
 	}
 
 	// update task
+	ddbRecurringRule := &dynamodb.RecurringRule{}
+	if req.Task.RecurringRule != nil {
+		ddbRecurringRule.CronExpression = req.Task.RecurringRule.CronExpression
+		ddbRecurringRule.StartDate = req.Task.RecurringRule.StartDate
+		ddbRecurringRule.EndDate = req.Task.RecurringRule.EndDate
+	}
 	updateTaskResp, err := t.ddb.UpdateTask(ctx, &dynamodb.UpdateTaskReq{
 		UserID: userIDs[0],
 		TaskID: req.Task.Id,
@@ -179,7 +185,7 @@ func (t *todoServer) UpdateTask(ctx context.Context, req *proto.UpdateTaskReq) (
 			dynamodb.TagsKey:          req.Task.Tags,
 			dynamodb.ParentsKey:       req.Task.Parents,
 			dynamodb.DueDateKey:       req.Task.DueDate,
-			dynamodb.RecurringRuleKey: req.Task.RecurringRule,
+			dynamodb.RecurringRuleKey: ddbRecurringRule,
 		},
 	})
 	if err != nil {

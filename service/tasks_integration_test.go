@@ -292,7 +292,7 @@ func Test_Integration_todoServer_DeleteTask(t *testing.T) {
 			},
 			want: &proto.DeleteTaskResp{},
 			wantTaskIdSet: map[string]struct{}{
-				common.TASK_2A_ID: {},
+				// common.TASK_2A_ID: {}, # deleted in the first DeleteTask test
 				common.TASK_2B_ID: {},
 				common.TASK_2C_ID: {},
 				common.TASK_2D_ID: {},
@@ -309,7 +309,7 @@ func Test_Integration_todoServer_DeleteTask(t *testing.T) {
 			},
 			want: &proto.DeleteTaskResp{},
 			wantTaskIdSet: map[string]struct{}{
-				common.TASK_2A_ID: {},
+				// common.TASK_2A_ID: {}, # deleted in the first DeleteTask test
 				common.TASK_2B_ID: {},
 				common.TASK_2C_ID: {},
 				common.TASK_2D_ID: {},

@@ -154,6 +154,10 @@ type UpdateTaskResp struct {
 func (ddb *DynamoDBClient) UpdateTask(ctx context.Context, req *UpdateTaskReq) (*UpdateTaskResp, error) {
 	update := expression.Set(expression.Name("updated_at"), expression.Value(time.Now().Unix()))
 	for name, value := range req.KVPairs {
+		if value == nil {
+			update.Set(expression.Name(name), expression.Value(value))
+			continue
+		}
 		switch name {
 		case TitleKey, DescriptionKey, StatusKey:
 			if _, ok := value.(string); !ok {
@@ -168,6 +172,9 @@ func (ddb *DynamoDBClient) UpdateTask(ctx context.Context, req *UpdateTaskReq) (
 				return nil, fmt.Errorf("the value type of %s should be a list of strings", name)
 			}
 		case RecurringRuleKey:
+			if value == nil {
+				continue
+			}
 			if _, ok := value.(RecurringRule); !ok {
 				return nil, fmt.Errorf("the value type of %s should model the RecurringRule Type", name)
 			}

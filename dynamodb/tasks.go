@@ -189,7 +189,8 @@ func (ddb *DynamoDBClient) UpdateTask(ctx context.Context, req *UpdateTaskReq) (
 	if err != nil {
 		return nil, fmt.Errorf("failed to get update builder: %v", err)
 	}
-	expr, err := expression.NewBuilder().WithUpdate(*update).Build()
+	cond := expression.Equal(expression.Name(TaskIDKey), expression.Value(req.TaskID))
+	expr, err := expression.NewBuilder().WithCondition(cond).WithUpdate(*update).Build()
 	if err != nil {
 		return nil, fmt.Errorf("failed to build expression: %v", err)
 	}
@@ -201,6 +202,7 @@ func (ddb *DynamoDBClient) UpdateTask(ctx context.Context, req *UpdateTaskReq) (
 		},
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
+		ConditionExpression:       expr.Condition(),
 		UpdateExpression:          expr.Update(),
 		ReturnValues:              types.ReturnValueUpdatedNew,
 	})

@@ -243,7 +243,7 @@ func Test_Integration_todoServer_UpdateTask(t *testing.T) {
 		{
 			name: "no user id provided in context",
 			args: args{
-				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
+				ctx: context.Background(),
 				req: &proto.UpdateTaskReq{
 					Task: &proto.Task{
 						Userid: common.TEST_USER_1_ID,

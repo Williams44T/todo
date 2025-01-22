@@ -192,3 +192,87 @@ func Test_Integration_todoServer_GetAllTasks(t *testing.T) {
 		})
 	}
 }
+
+func Test_Integration_todoServer_UpdateTask(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		req *proto.UpdateTaskReq
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *proto.UpdateTaskResp
+		wantErr bool
+	}{
+		{
+			name: "happy path",
+			args: args{
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
+				req: &proto.UpdateTaskReq{
+					Task: &proto.Task{
+						Userid: common.TEST_USER_1_ID,
+						Id:     common.TASK_1A_ID,
+						Status: proto.Status_COMPLETE,
+					},
+				},
+			},
+			want: &proto.UpdateTaskResp{
+				Task: &proto.Task{
+					Userid: common.TEST_USER_1_ID,
+					Id:     common.TASK_1A_ID,
+					Status: proto.Status_COMPLETE,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "task does not exist",
+			args: args{
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
+				req: &proto.UpdateTaskReq{
+					Task: &proto.Task{
+						Userid: common.TEST_USER_1_ID,
+						Id:     "nonexistent task id",
+						Status: proto.Status_COMPLETE,
+					},
+				},
+			},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "no user id provided in context",
+			args: args{
+				ctx: context.Background(),
+				req: &proto.UpdateTaskReq{
+					Task: &proto.Task{
+						Userid: common.TEST_USER_1_ID,
+						Id:     common.TASK_1A_ID,
+						Status: proto.Status_COMPLETE,
+					},
+				},
+			},
+			want:    nil,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// get database client
+			databaseClient, err := dynamodb.NewDynamoDBClient(tt.args.ctx)
+			if err != nil {
+				t.Errorf("integration todoServer.UpdateTask() failed to get database client: %v", err)
+			}
+
+			tr := &todoServer{
+				ddb: databaseClient,
+			}
+
+			_, err = tr.UpdateTask(tt.args.ctx, tt.args.req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("todoServer.UpdateTask() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+		})
+	}
+}

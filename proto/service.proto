@@ -12,6 +12,7 @@ service Todo {
     rpc AddTask (AddTaskReq) returns (AddTaskResp) {}
     rpc GetTask (GetTaskReq) returns (GetTaskResp) {}
     rpc GetAllTasks (GetAllTasksReq) returns (GetAllTasksResp) {}
+    rpc UpdateTask (UpdateTaskReq) returns (UpdateTaskResp) {}
 }
 
 message SignupReq {

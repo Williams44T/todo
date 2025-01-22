@@ -538,6 +538,94 @@ func (x *GetAllTasksResp) GetTasks() []*Task {
 	return nil
 }
 
+type UpdateTaskReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Task          *Task                  `protobuf:"bytes,1,opt,name=task,proto3" json:"task,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateTaskReq) Reset() {
+	*x = UpdateTaskReq{}
+	mi := &file_tasks_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateTaskReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateTaskReq) ProtoMessage() {}
+
+func (x *UpdateTaskReq) ProtoReflect() protoreflect.Message {
+	mi := &file_tasks_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateTaskReq.ProtoReflect.Descriptor instead.
+func (*UpdateTaskReq) Descriptor() ([]byte, []int) {
+	return file_tasks_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *UpdateTaskReq) GetTask() *Task {
+	if x != nil {
+		return x.Task
+	}
+	return nil
+}
+
+type UpdateTaskResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Task          *Task                  `protobuf:"bytes,1,opt,name=task,proto3" json:"task,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateTaskResp) Reset() {
+	*x = UpdateTaskResp{}
+	mi := &file_tasks_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateTaskResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateTaskResp) ProtoMessage() {}
+
+func (x *UpdateTaskResp) ProtoReflect() protoreflect.Message {
+	mi := &file_tasks_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateTaskResp.ProtoReflect.Descriptor instead.
+func (*UpdateTaskResp) Descriptor() ([]byte, []int) {
+	return file_tasks_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *UpdateTaskResp) GetTask() *Task {
+	if x != nil {
+		return x.Task
+	}
+	return nil
+}
+
 var File_tasks_proto protoreflect.FileDescriptor
 
 var file_tasks_proto_rawDesc = []byte{
@@ -593,11 +681,17 @@ var file_tasks_proto_rawDesc = []byte{
 	0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x54, 0x61, 0x73, 0x6b, 0x73, 0x52, 0x65, 0x73, 0x70, 0x12,
 	0x23, 0x0a, 0x05, 0x74, 0x61, 0x73, 0x6b, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0d,
 	0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x05, 0x74,
-	0x61, 0x73, 0x6b, 0x73, 0x2a, 0x26, 0x0a, 0x06, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x0e,
-	0x0a, 0x0a, 0x49, 0x4e, 0x43, 0x4f, 0x4d, 0x50, 0x4c, 0x45, 0x54, 0x45, 0x10, 0x00, 0x12, 0x0c,
-	0x0a, 0x08, 0x43, 0x4f, 0x4d, 0x50, 0x4c, 0x45, 0x54, 0x45, 0x10, 0x01, 0x42, 0x0f, 0x5a, 0x0d,
-	0x2e, 0x2f, 0x67, 0x65, 0x6e, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x61, 0x73, 0x6b, 0x73, 0x22, 0x32, 0x0a, 0x0d, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x54, 0x61,
+	0x73, 0x6b, 0x52, 0x65, 0x71, 0x12, 0x21, 0x0a, 0x04, 0x74, 0x61, 0x73, 0x6b, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x54, 0x61,
+	0x73, 0x6b, 0x52, 0x04, 0x74, 0x61, 0x73, 0x6b, 0x22, 0x33, 0x0a, 0x0e, 0x55, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x12, 0x21, 0x0a, 0x04, 0x74, 0x61,
+	0x73, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69,
+	0x63, 0x65, 0x2e, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x04, 0x74, 0x61, 0x73, 0x6b, 0x2a, 0x26, 0x0a,
+	0x06, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x0e, 0x0a, 0x0a, 0x49, 0x4e, 0x43, 0x4f, 0x4d,
+	0x50, 0x4c, 0x45, 0x54, 0x45, 0x10, 0x00, 0x12, 0x0c, 0x0a, 0x08, 0x43, 0x4f, 0x4d, 0x50, 0x4c,
+	0x45, 0x54, 0x45, 0x10, 0x01, 0x42, 0x0f, 0x5a, 0x0d, 0x2e, 0x2f, 0x67, 0x65, 0x6e, 0x2f, 0x73,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -613,7 +707,7 @@ func file_tasks_proto_rawDescGZIP() []byte {
 }
 
 var file_tasks_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_tasks_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_tasks_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_tasks_proto_goTypes = []any{
 	(Status)(0),             // 0: service.Status
 	(*RecurringRule)(nil),   // 1: service.RecurringRule
@@ -624,6 +718,8 @@ var file_tasks_proto_goTypes = []any{
 	(*GetTaskResp)(nil),     // 6: service.GetTaskResp
 	(*GetAllTasksReq)(nil),  // 7: service.GetAllTasksReq
 	(*GetAllTasksResp)(nil), // 8: service.GetAllTasksResp
+	(*UpdateTaskReq)(nil),   // 9: service.UpdateTaskReq
+	(*UpdateTaskResp)(nil),  // 10: service.UpdateTaskResp
 }
 var file_tasks_proto_depIdxs = []int32{
 	0, // 0: service.Task.status:type_name -> service.Status
@@ -632,11 +728,13 @@ var file_tasks_proto_depIdxs = []int32{
 	1, // 3: service.AddTaskReq.recurring_rule:type_name -> service.RecurringRule
 	2, // 4: service.GetTaskResp.Task:type_name -> service.Task
 	2, // 5: service.GetAllTasksResp.tasks:type_name -> service.Task
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	2, // 6: service.UpdateTaskReq.task:type_name -> service.Task
+	2, // 7: service.UpdateTaskResp.task:type_name -> service.Task
+	8, // [8:8] is the sub-list for method output_type
+	8, // [8:8] is the sub-list for method input_type
+	8, // [8:8] is the sub-list for extension type_name
+	8, // [8:8] is the sub-list for extension extendee
+	0, // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_tasks_proto_init() }
@@ -650,7 +748,7 @@ func file_tasks_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_tasks_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

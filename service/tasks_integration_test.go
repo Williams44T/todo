@@ -259,31 +259,61 @@ func Test_Integration_todoServer_DeleteTask(t *testing.T) {
 		req *proto.DeleteTaskReq
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    *proto.DeleteTaskResp
-		wantErr bool
+		name          string
+		args          args
+		want          *proto.DeleteTaskResp
+		wantTaskIdSet map[string]struct{}
+		wantErr       bool
 	}{
 		{
 			name: "happy path",
 			args: args{
-				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_2_ID)),
 				req: &proto.DeleteTaskReq{
-					TaskId: common.TASK_1A_ID,
+					TaskId: common.TASK_2A_ID,
 				},
 			},
-			want:    &proto.DeleteTaskResp{},
+			want: &proto.DeleteTaskResp{},
+			wantTaskIdSet: map[string]struct{}{
+				// common.TASK_2A_ID: {}, #deleted
+				common.TASK_2B_ID: {},
+				common.TASK_2C_ID: {},
+				common.TASK_2D_ID: {},
+			},
 			wantErr: false,
 		},
 		{
-			name: "happy path - task does not exist doesn't throw error",
+			name: "happy path - nonexistent task doesn't throw error",
 			args: args{
-				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_2_ID)),
 				req: &proto.DeleteTaskReq{
 					TaskId: "nonexistent_id",
 				},
 			},
-			want:    &proto.DeleteTaskResp{},
+			want: &proto.DeleteTaskResp{},
+			wantTaskIdSet: map[string]struct{}{
+				common.TASK_2A_ID: {},
+				common.TASK_2B_ID: {},
+				common.TASK_2C_ID: {},
+				common.TASK_2D_ID: {},
+			},
+			wantErr: false,
+		},
+		{
+			name: "happy path - can't delete a task you don't own",
+			args: args{
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
+				req: &proto.DeleteTaskReq{
+					TaskId: common.TASK_2A_ID,
+				},
+			},
+			want: &proto.DeleteTaskResp{},
+			wantTaskIdSet: map[string]struct{}{
+				common.TASK_2A_ID: {},
+				common.TASK_2B_ID: {},
+				common.TASK_2C_ID: {},
+				common.TASK_2D_ID: {},
+			},
 			wantErr: false,
 		},
 	}
@@ -303,6 +333,29 @@ func Test_Integration_todoServer_DeleteTask(t *testing.T) {
 			if (err != nil) != tt.wantErr {
 				t.Errorf("todoServer.DeleteTask() error = %v, wantErr %v", err, tt.wantErr)
 				return
+			}
+
+			// make sure task was actually deleted
+			resp, err := tr.GetAllTasks(
+				metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_2_ID)),
+				&proto.GetAllTasksReq{},
+			)
+			if err != nil {
+				t.Errorf("todoServer.GetAllTasks() error = %v", err)
+			}
+			gotTaskIdSet := map[string]struct{}{}
+			for _, gotTask := range resp.Tasks {
+				gotTaskIdSet[gotTask.Id] = struct{}{}
+			}
+			for id := range tt.wantTaskIdSet {
+				if _, ok := gotTaskIdSet[id]; !ok {
+					t.Errorf("want task ID %v not returned", id)
+				}
+			}
+			for id := range gotTaskIdSet {
+				if _, ok := tt.wantTaskIdSet[id]; !ok {
+					t.Errorf("unexpected task ID %v returned", id)
+				}
 			}
 		})
 	}

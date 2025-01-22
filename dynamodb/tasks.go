@@ -151,9 +151,9 @@ type UpdateTaskResp struct {
 	Task Task
 }
 
-func (ddb *DynamoDBClient) UpdateTask(ctx context.Context, req *UpdateTaskReq) (*UpdateTaskResp, error) {
+func buildUpdateExpression(kvPairs map[string]interface{}) (*expression.UpdateBuilder, error) {
 	update := expression.Set(expression.Name("updated_at"), expression.Value(time.Now().Unix()))
-	for name, value := range req.KVPairs {
+	for name, value := range kvPairs {
 		switch name {
 		case TitleKey, DescriptionKey, StatusKey:
 			if _, ok := value.(string); !ok {
@@ -171,7 +171,7 @@ func (ddb *DynamoDBClient) UpdateTask(ctx context.Context, req *UpdateTaskReq) (
 			if value == nil {
 				continue
 			}
-			if _, ok := value.(RecurringRule); !ok {
+			if _, ok := value.(*RecurringRule); !ok {
 				return nil, fmt.Errorf("the value type of %s should model the RecurringRule Type", name)
 			}
 		case UserIDKey, TaskIDKey:
@@ -181,7 +181,15 @@ func (ddb *DynamoDBClient) UpdateTask(ctx context.Context, req *UpdateTaskReq) (
 		}
 		update.Set(expression.Name(name), expression.Value(value))
 	}
-	expr, err := expression.NewBuilder().WithUpdate(update).Build()
+	return &update, nil
+}
+
+func (ddb *DynamoDBClient) UpdateTask(ctx context.Context, req *UpdateTaskReq) (*UpdateTaskResp, error) {
+	update, err := buildUpdateExpression(req.KVPairs)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get update builder: %v", err)
+	}
+	expr, err := expression.NewBuilder().WithUpdate(*update).Build()
 	if err != nil {
 		return nil, fmt.Errorf("failed to build expression: %v", err)
 	}

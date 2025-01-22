@@ -74,7 +74,7 @@ func Test_Integration_todoServer_GetTask(t *testing.T) {
 			args: args{
 				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
 				req: &proto.GetTaskReq{
-					Id: common.TASK_1_ID,
+					Id: common.TASK_1A_ID,
 				},
 			},
 			wantErr: false,
@@ -125,14 +125,14 @@ func Test_Integration_todoServer_GetAllTasks(t *testing.T) {
 		{
 			name: "happy path",
 			args: args{
-				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_2_ID)),
 				req: &proto.GetAllTasksReq{},
 			},
 			wantTaskIdSet: map[string]struct{}{
-				common.TASK_1A_ID: {},
-				common.TASK_1B_ID: {},
-				common.TASK_1C_ID: {},
-				common.TASK_1D_ID: {},
+				common.TASK_2A_ID: {},
+				common.TASK_2B_ID: {},
+				common.TASK_2C_ID: {},
+				common.TASK_2D_ID: {},
 			},
 			wantErr: false,
 		},

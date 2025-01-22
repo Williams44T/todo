@@ -110,3 +110,85 @@ func Test_Integration_todoServer_GetTask(t *testing.T) {
 		})
 	}
 }
+
+func Test_Integration_todoServer_GetAllTasks(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		req *proto.GetAllTasksReq
+	}
+	tests := []struct {
+		name          string
+		args          args
+		wantTaskIdSet map[string]struct{}
+		wantErr       bool
+	}{
+		{
+			name: "happy path",
+			args: args{
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, common.TEST_USER_1_ID)),
+				req: &proto.GetAllTasksReq{},
+			},
+			wantTaskIdSet: map[string]struct{}{
+				common.TASK_1A_ID: {},
+				common.TASK_1B_ID: {},
+				common.TASK_1C_ID: {},
+				common.TASK_1D_ID: {},
+			},
+			wantErr: false,
+		},
+		{
+			name: "user id not provided in context",
+			args: args{
+				ctx: context.Background(),
+				req: &proto.GetAllTasksReq{},
+			},
+			wantTaskIdSet: map[string]struct{}{},
+			wantErr:       true,
+		},
+		{
+			name: "no tasks tied to provided user id",
+			args: args{
+				ctx: metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, "fake_user_id")),
+				req: &proto.GetAllTasksReq{},
+			},
+			wantTaskIdSet: map[string]struct{}{},
+			wantErr:       false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// get database client
+			databaseClient, err := dynamodb.NewDynamoDBClient(tt.args.ctx)
+			if err != nil {
+				t.Errorf("integration todoServer.GetAllTasks() failed to get database client: %v", err)
+			}
+
+			tr := &todoServer{
+				ddb: databaseClient,
+			}
+
+			got, err := tr.GetAllTasks(tt.args.ctx, tt.args.req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("todoServer.GetAllTasks() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if tt.wantErr {
+				return
+			}
+			gotTaskIdSet := map[string]struct{}{}
+			for _, gotTask := range got.Tasks {
+				gotTaskIdSet[gotTask.Id] = struct{}{}
+			}
+			for id := range tt.wantTaskIdSet {
+				if _, ok := gotTaskIdSet[id]; !ok {
+					t.Errorf("want task ID %v not returned", id)
+				}
+			}
+			for id := range gotTaskIdSet {
+				if _, ok := tt.wantTaskIdSet[id]; !ok {
+					t.Errorf("unexpected task ID %v returned", id)
+				}
+			}
+		})
+	}
+}

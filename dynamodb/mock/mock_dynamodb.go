@@ -3,13 +3,14 @@ package mock
 import (
 	"context"
 	"errors"
+	"fmt"
 	"todo/dynamodb"
 )
 
 type MockDynamoDBClient struct {
 	// Tables
 	UsersTable map[string]dynamodb.User
-	TasksTable map[string]dynamodb.Task
+	TasksTable map[string][]dynamodb.Task
 
 	// Users
 	AddUserErr    error
@@ -21,6 +22,7 @@ type MockDynamoDBClient struct {
 	AddTaskErr      error
 	GetTaskErr      error
 	BatchGetTaskErr error
+	GetAllTasksErr  error
 	UpdateTaskErr   error
 	DeleteTaskErr   error
 
@@ -72,9 +74,9 @@ func (mdb *MockDynamoDBClient) AddTask(ctx context.Context, req *dynamodb.AddTas
 		return nil, mdb.AddTaskErr
 	}
 	if mdb.TasksTable == nil {
-		mdb.TasksTable = make(map[string]dynamodb.Task)
+		mdb.TasksTable = make(map[string][]dynamodb.Task)
 	}
-	mdb.TasksTable[req.Task.TaskID] = req.Task
+	mdb.TasksTable[req.Task.UserID] = append(mdb.TasksTable[req.Task.UserID], req.Task)
 	return &dynamodb.AddTaskResp{}, nil
 }
 
@@ -85,17 +87,34 @@ func (mdb *MockDynamoDBClient) GetTask(ctx context.Context, req *dynamodb.GetTas
 	if mdb.TasksTable == nil {
 		return nil, errors.New("tasksTable does not exist")
 	}
-	task := mdb.TasksTable[req.TaskID]
-	if task.UserID != req.UserID {
-		return nil, errors.New("unauthorized")
+	tasks, ok := mdb.TasksTable[req.UserID]
+	if !ok {
+		return nil, fmt.Errorf("user id %s does not exist", req.UserID)
 	}
-	return &dynamodb.GetTaskResp{
-		Task: &task,
-	}, nil
+	for _, task := range tasks {
+		if task.TaskID == req.TaskID {
+			return &dynamodb.GetTaskResp{Task: &task}, nil
+		}
+	}
+	return &dynamodb.GetTaskResp{}, nil
 }
 
 func (mdb *MockDynamoDBClient) BatchGetTask(ctx context.Context, req *dynamodb.BatchGetTaskReq) (*dynamodb.BatchGetTaskResp, error) {
 	return nil, errors.New("not implemented")
+}
+
+func (mdb *MockDynamoDBClient) GetAllTasks(ctx context.Context, req *dynamodb.GetAllTasksReq) (*dynamodb.GetAllTasksResp, error) {
+	if mdb.GetAllTasksErr != nil {
+		return nil, mdb.GetAllTasksErr
+	}
+	if mdb.TasksTable == nil {
+		return nil, errors.New("tasksTable does not exist")
+	}
+	tasks, ok := mdb.TasksTable[req.UserID]
+	if !ok {
+		return &dynamodb.GetAllTasksResp{Tasks: []dynamodb.Task{}}, nil
+	}
+	return &dynamodb.GetAllTasksResp{Tasks: tasks}, nil
 }
 
 func (mdb *MockDynamoDBClient) UpdateTask(ctx context.Context, req *dynamodb.UpdateTaskReq) (*dynamodb.UpdateTaskResp, error) {

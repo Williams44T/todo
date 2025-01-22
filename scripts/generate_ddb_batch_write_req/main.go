@@ -26,6 +26,9 @@ type UserID struct {
 type TaskID struct {
 	S string `json:"S,omitempty"`
 }
+type Status struct {
+	S string `json:"S,omitempty"`
+}
 type Item struct {
 	// user fields
 	ID             *ID             `json:"id,omitempty"`
@@ -34,6 +37,7 @@ type Item struct {
 	// task fields
 	UserID *UserID `json:"user_id,omitempty"`
 	TaskID *TaskID `json:"task_id,omitempty"`
+	Status *Status `json:"status,omitempty"`
 }
 type PutRequest struct {
 	Item *Item `json:"Item,omitempty"`
@@ -59,7 +63,7 @@ func getPutUserRequest(id, hashedPassword string) *PutRequest {
 	}
 }
 
-func getPutTaskRequest(userID, taskID string) *PutRequest {
+func getPutTaskRequest(userID, taskID, status string) *PutRequest {
 	return &PutRequest{
 		Item: &Item{
 			UserID: &UserID{
@@ -67,6 +71,9 @@ func getPutTaskRequest(userID, taskID string) *PutRequest {
 			},
 			TaskID: &TaskID{
 				S: taskID,
+			},
+			Status: &Status{
+				S: status,
 			},
 		},
 	}
@@ -88,7 +95,14 @@ func main() {
 			{PutRequest: getPutUserRequest(common.TEST_USER_1_ID, hashPassword(common.TEST_USER_1_PASSWORD))},
 		},
 		TasksTable: []*WriteRequest{
-			{PutRequest: getPutTaskRequest(common.TEST_USER_1_ID, common.TASK_1_ID)},
+			{PutRequest: getPutTaskRequest(common.TEST_USER_1_ID, common.TASK_1A_ID, "INCOMPLETE")},
+			{PutRequest: getPutTaskRequest(common.TEST_USER_1_ID, common.TASK_1B_ID, "INCOMPLETE")},
+			{PutRequest: getPutTaskRequest(common.TEST_USER_1_ID, common.TASK_1C_ID, "COMPLETE")},
+			{PutRequest: getPutTaskRequest(common.TEST_USER_1_ID, common.TASK_1D_ID, "COMPLETE")},
+			{PutRequest: getPutTaskRequest(common.TEST_USER_2_ID, common.TASK_2A_ID, "INCOMPLETE")},
+			{PutRequest: getPutTaskRequest(common.TEST_USER_2_ID, common.TASK_2B_ID, "INCOMPLETE")},
+			{PutRequest: getPutTaskRequest(common.TEST_USER_2_ID, common.TASK_2C_ID, "COMPLETE")},
+			{PutRequest: getPutTaskRequest(common.TEST_USER_2_ID, common.TASK_2D_ID, "COMPLETE")},
 		},
 	}
 

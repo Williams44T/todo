@@ -13,6 +13,7 @@ type DynamoDBInterface interface {
 	AddTask(context.Context, *AddTaskReq) (*AddTaskResp, error)
 	GetTask(context.Context, *GetTaskReq) (*GetTaskResp, error)
 	BatchGetTask(context.Context, *BatchGetTaskReq) (*BatchGetTaskResp, error)
+	GetAllTasks(context.Context, *GetAllTasksReq) (*GetAllTasksResp, error)
 	UpdateTask(context.Context, *UpdateTaskReq) (*UpdateTaskResp, error)
 	DeleteTask(context.Context, *DeleteTaskReq) (*DeleteTaskResp, error)
 

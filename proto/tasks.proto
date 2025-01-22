@@ -55,3 +55,9 @@ message GetTaskReq {
 message GetTaskResp {
     Task Task = 1;
 }
+
+message GetAllTasksReq {}
+
+message GetAllTasksResp {
+    repeated Task tasks = 1;
+}

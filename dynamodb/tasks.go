@@ -4,12 +4,25 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+)
+
+const (
+	UserIDKey        = "user_id"
+	TaskIDKey        = "task_id"
+	TitleKey         = "title"
+	DescriptionKey   = "description"
+	StatusKey        = "status"
+	TagsKey          = "tags"
+	ParentsKey       = "parents"
+	DueDateKey       = "due_date"
+	RecurringRuleKey = "recurring_rule"
 )
 
 type RecurringRule struct {
@@ -129,11 +142,67 @@ func (ddb *DynamoDBClient) GetAllTasks(ctx context.Context, req *GetAllTasksReq)
 	}, nil
 }
 
-type UpdateTaskReq struct{}
-type UpdateTaskResp struct{}
+type UpdateTaskReq struct {
+	UserID  string
+	TaskID  string
+	KVPairs map[string]interface{}
+}
+type UpdateTaskResp struct {
+	Task Task
+}
 
 func (ddb *DynamoDBClient) UpdateTask(ctx context.Context, req *UpdateTaskReq) (*UpdateTaskResp, error) {
-	return nil, errors.New("not implemented yet")
+	update := expression.Set(expression.Name("updated_at"), expression.Value(time.Now().Unix()))
+	for name, value := range req.KVPairs {
+		switch name {
+		case TitleKey, DescriptionKey, StatusKey:
+			if _, ok := value.(string); !ok {
+				return nil, fmt.Errorf("the value type of %s should be a string", name)
+			}
+		case DueDateKey:
+			if _, ok := value.(int64); !ok {
+				return nil, fmt.Errorf("the value type of %s should be int64", name)
+			}
+		case TagsKey, ParentsKey:
+			if _, ok := value.([]string); !ok {
+				return nil, fmt.Errorf("the value type of %s should be a list of strings", name)
+			}
+		case RecurringRuleKey:
+			if _, ok := value.(RecurringRule); !ok {
+				return nil, fmt.Errorf("the value type of %s should model the RecurringRule Type", name)
+			}
+		case UserIDKey, TaskIDKey:
+			return nil, fmt.Errorf("not allowed to update %s", name)
+		default:
+			return nil, fmt.Errorf("unknown task attribute: %s", name)
+		}
+		update.Set(expression.Name(name), expression.Value(value))
+	}
+	expr, err := expression.NewBuilder().WithUpdate(update).Build()
+	if err != nil {
+		return nil, fmt.Errorf("failed to build expression: %v", err)
+	}
+	resp, err := ddb.client.UpdateItem(ctx, &dynamodb.UpdateItemInput{
+		TableName: &ddb.tasksTableName,
+		Key: map[string]types.AttributeValue{
+			"user_id": &types.AttributeValueMemberS{Value: req.UserID},
+			"task_id": &types.AttributeValueMemberS{Value: req.TaskID},
+		},
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		UpdateExpression:          expr.Update(),
+		ReturnValues:              types.ReturnValueUpdatedNew,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to update item: %v", err)
+	}
+	updatedTask := Task{}
+	if err = attributevalue.UnmarshalMap(resp.Attributes, &updatedTask); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal attribute map: %v", err)
+	}
+	return &UpdateTaskResp{
+		Task: updatedTask,
+	}, nil
 }
 
 type DeleteTaskReq struct{}

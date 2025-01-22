@@ -61,3 +61,11 @@ message GetAllTasksReq {}
 message GetAllTasksResp {
     repeated Task tasks = 1;
 }
+
+message UpdateTaskReq {
+    Task task = 1;
+}
+
+message UpdateTaskResp {
+    Task task = 1;
+}

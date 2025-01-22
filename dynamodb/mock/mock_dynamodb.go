@@ -118,7 +118,10 @@ func (mdb *MockDynamoDBClient) GetAllTasks(ctx context.Context, req *dynamodb.Ge
 }
 
 func (mdb *MockDynamoDBClient) UpdateTask(ctx context.Context, req *dynamodb.UpdateTaskReq) (*dynamodb.UpdateTaskResp, error) {
-	return nil, errors.New("not implemented")
+	if mdb.UpdateTaskErr != nil {
+		return nil, mdb.UpdateTaskErr
+	}
+	return &dynamodb.UpdateTaskResp{}, nil
 }
 
 func (mdb *MockDynamoDBClient) DeleteTask(ctx context.Context, req *dynamodb.DeleteTaskReq) (*dynamodb.DeleteTaskResp, error) {

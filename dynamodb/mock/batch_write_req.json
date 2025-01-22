@@ -7,7 +7,7 @@
             "S": "test_user_1"
           },
           "hashed_password": {
-            "S": "$argon2id$v=19$m=65536,t=1,p=8$g3CUrAypb5NaLuEg4LYxhA$2BmAEOV56h+aRJnHuIU1iwoROwGQ7xV0UpzGnQmKsKo"
+            "S": "$argon2id$v=19$m=65536,t=1,p=8$oYKWjW5Ji7kzZy9SPy8XLA$rJSfjNeaxoGnjtwOPC7AbI006N8n9mQeC5KuY2tIWAQ"
           }
         }
       }
@@ -21,7 +21,115 @@
             "S": "test_user_1"
           },
           "task_id": {
-            "S": "task_1"
+            "S": "task_a"
+          },
+          "status": {
+            "S": "INCOMPLETE"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "user_id": {
+            "S": "test_user_1"
+          },
+          "task_id": {
+            "S": "task_b"
+          },
+          "status": {
+            "S": "INCOMPLETE"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "user_id": {
+            "S": "test_user_1"
+          },
+          "task_id": {
+            "S": "task_c"
+          },
+          "status": {
+            "S": "COMPLETE"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "user_id": {
+            "S": "test_user_1"
+          },
+          "task_id": {
+            "S": "task_d"
+          },
+          "status": {
+            "S": "COMPLETE"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "user_id": {
+            "S": "test_user_2"
+          },
+          "task_id": {
+            "S": "task_a"
+          },
+          "status": {
+            "S": "INCOMPLETE"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "user_id": {
+            "S": "test_user_2"
+          },
+          "task_id": {
+            "S": "task_b"
+          },
+          "status": {
+            "S": "INCOMPLETE"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "user_id": {
+            "S": "test_user_2"
+          },
+          "task_id": {
+            "S": "task_c"
+          },
+          "status": {
+            "S": "COMPLETE"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "user_id": {
+            "S": "test_user_2"
+          },
+          "task_id": {
+            "S": "task_d"
+          },
+          "status": {
+            "S": "COMPLETE"
           }
         }
       }

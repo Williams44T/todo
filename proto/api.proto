@@ -5,6 +5,7 @@ package api;
 option go_package = "./gen/go/api";
 
 import "tasks.proto";
+import "susi.proto";
 
 service Todo {
     rpc Signup (SignupReq) returns (SignupResp) {}
@@ -14,25 +15,4 @@ service Todo {
     rpc GetAllTasks (GetAllTasksReq) returns (GetAllTasksResp) {}
     rpc UpdateTask (UpdateTaskReq) returns (UpdateTaskResp) {}
     rpc DeleteTask (DeleteTaskReq) returns (DeleteTaskResp) {}
-}
-
-message SignupReq {
-    string firstName = 1;
-    string lastName = 2;
-    string email = 3;
-    string password = 4;
-}
-
-message SignupResp {
-    string accessJWT = 1;
-    string userID = 2;
-}
-
-message SigninReq {
-    string userID = 1;
-    string password = 2;
-}
-
-message SigninResp {
-    string accessJWT = 1;
 }

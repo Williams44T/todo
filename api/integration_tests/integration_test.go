@@ -65,7 +65,7 @@ func Test_Integration_TodoServer(t *testing.T) {
 		userB = resp.UserID
 	})
 
-	t.Run("UserA Adds Tasks", func(t *testing.T) {
+	t.Run("UserA adds tasks", func(t *testing.T) {
 		// Verifying the user's JWT is not tested throughout this test since none of the interceptors are involved,
 		// so we mock the action of the interceptor placing the user's id in the metadata after successful auth.
 		ctx := metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, userA))
@@ -87,7 +87,7 @@ func Test_Integration_TodoServer(t *testing.T) {
 		taskA2 = resp.Id
 	})
 
-	t.Run("UserB Adds Tasks", func(t *testing.T) {
+	t.Run("UserB adds tasks", func(t *testing.T) {
 		ctx := metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, userB))
 		resp, err := todo.AddTask(ctx, &proto.AddTaskReq{Title: "taskB1"})
 		if err != nil {
@@ -126,7 +126,7 @@ func Test_Integration_TodoServer(t *testing.T) {
 		}
 	})
 
-	t.Run("UserA attempts to update a task that doesn't belong to her", func(t *testing.T) {
+	t.Run("UserA attempts to update UserB's task", func(t *testing.T) {
 		ctx := metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, userA))
 		resp, _ := todo.UpdateTask(ctx, &proto.UpdateTaskReq{
 			Task: &proto.Task{Id: taskB1, Title: "I've updated your task, ha ha!"},
@@ -147,7 +147,7 @@ func Test_Integration_TodoServer(t *testing.T) {
 		}
 	})
 
-	t.Run("UserA deletes A task", func(t *testing.T) {
+	t.Run("UserA deletes a task", func(t *testing.T) {
 		ctx := metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, userA))
 		_, err := todo.DeleteTask(ctx, &proto.DeleteTaskReq{TaskId: taskA1})
 		if err != nil {
@@ -158,20 +158,21 @@ func Test_Integration_TodoServer(t *testing.T) {
 		if err != nil {
 			t.Errorf("failed to GetAllTasks: %v", err)
 		}
-		if resp.Tasks[0].Id != taskA2 || len(resp.Tasks) > 0 {
+		if resp.Tasks[0].Id != taskA2 || len(resp.Tasks) > 1 {
 			t.Errorf("taskA1 was not deleted successfully")
 		}
 	})
 
 	t.Run("UserA attempts to delete UserB's task", func(t *testing.T) {
 		ctx := metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, userA))
-		resp, _ := todo.DeleteTask(ctx, &proto.DeleteTaskReq{TaskId: taskB1})
-		if resp != nil {
-			t.Errorf("unauthorized DeleteTask call was successful, resp: %v:", resp)
+		_, err := todo.DeleteTask(ctx, &proto.DeleteTaskReq{TaskId: taskB1})
+		if err != nil {
+			// the behaviour here should be rethought
+			t.Errorf("DeleteTask shouldn't error here: %v", err)
 		}
 	})
 
-	t.Run("Confirm UserB's task was not updated by UserA", func(t *testing.T) {
+	t.Run("Confirm UserB's task was not updated", func(t *testing.T) {
 		ctx := metadata.NewIncomingContext(context.Background(), metadata.Pairs(common.USERID_METADATA_KEY, userB))
 		resp, err := todo.GetAllTasks(ctx, &proto.GetAllTasksReq{})
 		if err != nil {

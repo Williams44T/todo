@@ -13,7 +13,7 @@ import (
 	proto "todo/proto/gen/go/api"
 )
 
-func Test_todoServer_Signup(t *testing.T) {
+func Test_TodoServer_Signup(t *testing.T) {
 	type fields struct {
 		UnimplementedTodoServer proto.UnimplementedTodoServer
 		ddb                     dynamodb.DynamoDBInterface
@@ -147,34 +147,34 @@ func Test_todoServer_Signup(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tr := &todoServer{
+			tr := &TodoServer{
 				UnimplementedTodoServer: tt.fields.UnimplementedTodoServer,
 				ddb:                     tt.fields.ddb,
 				jwt:                     tt.fields.jwt,
 			}
 			got, err := tr.Signup(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.Signup() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.Signup() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			// We can't guess the user id, so just check for existence and then erase it so the next check passes.
 			if tt.want != nil && got != nil {
 				if got.UserID == "" {
-					t.Error("todoServer.Signup() no user id returned")
+					t.Error("TodoServer.Signup() no user id returned")
 				}
 				got.UserID = ""
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("todoServer.Signup() = %v, want %v", got, tt.want)
+				t.Errorf("TodoServer.Signup() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func Test_todoServer_Signin(t *testing.T) {
+func Test_TodoServer_Signin(t *testing.T) {
 	hashedPassword, err := hashPassword(common.TEST_USER_1_PASSWORD)
 	if err != nil {
-		t.Errorf("todoServer.Signin() failed to hash password: %v", err)
+		t.Errorf("TodoServer.Signin() failed to hash password: %v", err)
 	}
 	type fields struct {
 		UnimplementedTodoServer proto.UnimplementedTodoServer
@@ -310,18 +310,18 @@ func Test_todoServer_Signin(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tr := &todoServer{
+			tr := &TodoServer{
 				UnimplementedTodoServer: tt.fields.UnimplementedTodoServer,
 				ddb:                     tt.fields.ddb,
 				jwt:                     tt.fields.jwt,
 			}
 			got, err := tr.Signin(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.Signin() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.Signin() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("todoServer.Signin() = %v, want %v", got, tt.want)
+				t.Errorf("TodoServer.Signin() = %v, want %v", got, tt.want)
 			}
 		})
 	}

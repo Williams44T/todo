@@ -23,7 +23,7 @@ func validateRecurringRule(rule *proto.RecurringRule) error {
 	return nil
 }
 
-func (t *todoServer) AddTask(ctx context.Context, req *proto.AddTaskReq) (*proto.AddTaskResp, error) {
+func (t *TodoServer) AddTask(ctx context.Context, req *proto.AddTaskReq) (*proto.AddTaskResp, error) {
 	// validate req
 	if req.Title == "" {
 		return nil, errors.New("title cannot be blank")
@@ -38,6 +38,9 @@ func (t *todoServer) AddTask(ctx context.Context, req *proto.AddTaskReq) (*proto
 		return nil, fmt.Errorf("user id is not provided in metadata")
 	}
 
+	// generate task id
+	taskID := uuid.New().String()
+
 	// use db client to add task
 	ddbRecurringRule := &dynamodb.RecurringRule{}
 	if req.RecurringRule != nil {
@@ -48,7 +51,7 @@ func (t *todoServer) AddTask(ctx context.Context, req *proto.AddTaskReq) (*proto
 	_, err := t.ddb.AddTask(ctx, &dynamodb.AddTaskReq{
 		Task: dynamodb.Task{
 			UserID:        userIDs[0],
-			TaskID:        uuid.New().String(),
+			TaskID:        taskID,
 			Title:         req.Title,
 			Description:   req.Description,
 			Status:        req.Status.String(),
@@ -61,5 +64,7 @@ func (t *todoServer) AddTask(ctx context.Context, req *proto.AddTaskReq) (*proto
 		return nil, fmt.Errorf("failed to add task to database: %v", err)
 	}
 
-	return &proto.AddTaskResp{}, nil
+	return &proto.AddTaskResp{
+		Id: taskID,
+	}, nil
 }

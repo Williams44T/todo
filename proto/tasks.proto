@@ -46,6 +46,7 @@ message AddTaskReq {
 }
 
 message AddTaskResp {
+    string id = 1;
 }
 
 message GetTaskReq {

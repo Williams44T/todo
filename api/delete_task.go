@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func (t *todoServer) DeleteTask(ctx context.Context, req *proto.DeleteTaskReq) (*proto.DeleteTaskResp, error) {
+func (t *TodoServer) DeleteTask(ctx context.Context, req *proto.DeleteTaskReq) (*proto.DeleteTaskResp, error) {
 	// validate request
 	if req.TaskId == "" {
 		return nil, errors.New("task id cannot be blank")

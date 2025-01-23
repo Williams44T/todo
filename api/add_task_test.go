@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"errors"
-	"reflect"
 	"testing"
 	"time"
 	"todo/common"
@@ -16,7 +15,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func Test_todoServer_AddTask(t *testing.T) {
+func Test_TodoServer_AddTask(t *testing.T) {
 	type fields struct {
 		UnimplementedTodoServer proto.UnimplementedTodoServer
 		ddb                     dynamodb.DynamoDBInterface
@@ -27,11 +26,11 @@ func Test_todoServer_AddTask(t *testing.T) {
 		req *proto.AddTaskReq
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    *proto.AddTaskResp
-		wantErr bool
+		name     string
+		fields   fields
+		args     args
+		wantResp bool
+		wantErr  bool
 	}{
 		{
 			name: "happy path",
@@ -48,8 +47,8 @@ func Test_todoServer_AddTask(t *testing.T) {
 					DueDate:     time.Now().Unix(),
 				},
 			},
-			want:    &proto.AddTaskResp{},
-			wantErr: false,
+			wantResp: true,
+			wantErr:  false,
 		},
 		{
 			name: "no user id in context",
@@ -66,8 +65,8 @@ func Test_todoServer_AddTask(t *testing.T) {
 					DueDate:     time.Now().Unix(),
 				},
 			},
-			want:    nil,
-			wantErr: true,
+			wantResp: false,
+			wantErr:  true,
 		},
 		{
 			name: "no title",
@@ -83,8 +82,8 @@ func Test_todoServer_AddTask(t *testing.T) {
 					DueDate:     time.Now().Unix(),
 				},
 			},
-			want:    nil,
-			wantErr: true,
+			wantResp: false,
+			wantErr:  true,
 		},
 		{
 			name: "AddTask returns error",
@@ -103,24 +102,25 @@ func Test_todoServer_AddTask(t *testing.T) {
 					DueDate:     time.Now().Unix(),
 				},
 			},
-			want:    nil,
-			wantErr: true,
+			wantResp: false,
+			wantErr:  true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tr := &todoServer{
+			tr := &TodoServer{
 				UnimplementedTodoServer: tt.fields.UnimplementedTodoServer,
 				ddb:                     tt.fields.ddb,
 				jwt:                     tt.fields.jwt,
 			}
 			got, err := tr.AddTask(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.AddTask() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.AddTask() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("todoServer.AddTask() = %v, want %v", got, tt.want)
+			if (got != nil) != tt.wantResp {
+				t.Errorf("TodoServer.AddTask() got = %v, wantResp %v", err, tt.wantErr)
+				return
 			}
 		})
 	}

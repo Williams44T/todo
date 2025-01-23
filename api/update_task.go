@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func (t *todoServer) UpdateTask(ctx context.Context, req *proto.UpdateTaskReq) (*proto.UpdateTaskResp, error) {
+func (t *TodoServer) UpdateTask(ctx context.Context, req *proto.UpdateTaskReq) (*proto.UpdateTaskResp, error) {
 	// validate request
 	if req.Task.Id == "" {
 		return nil, errors.New("task id cannot be blank")

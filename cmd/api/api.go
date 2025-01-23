@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 	"net"
-	proto "todo/proto/gen/service"
-	"todo/service"
-	"todo/service/interceptor"
+	proto "todo/proto/gen/go/api"
+	"todo/api"
+	"todo/api/interceptor"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -31,13 +31,13 @@ func main() {
 	server := grpc.NewServer(grpc.UnaryInterceptor(interceptor.UnaryAuthMiddleware))
 
 	// register server
-	todoService, err := service.NewTodoServer(ctx)
+	todoService, err := api.NewTodoServer(ctx)
 	if err != nil {
-		log.Fatalf("failed to get todo service: %s", err)
+		log.Fatalf("failed to get todo api. %s", err)
 	}
 	proto.RegisterTodoServer(server, todoService)
 
-	// egister reflection service on server
+	// egister reflection api.on server
 	reflection.Register(server)
 
 	// start server

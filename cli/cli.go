@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"todo/cli/interceptor"
-	proto "todo/proto/gen/service"
+	proto "todo/proto/gen/go/api"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

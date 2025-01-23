@@ -1,4 +1,4 @@
-package service
+package api
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"todo/common"
 	"todo/interfaces/dynamodb"
 	"todo/interfaces/token_manager"
-	proto "todo/proto/gen/service"
+	proto "todo/proto/gen/go/api"
 
 	"github.com/alexedwards/argon2id"
 	"github.com/google/uuid"

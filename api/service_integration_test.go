@@ -1,7 +1,7 @@
 //go:build integration
 // +build integration
 
-package service
+package api
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"todo/common"
 	"todo/interfaces/dynamodb"
 	"todo/interfaces/token_manager"
-	proto "todo/proto/gen/service"
+	proto "todo/proto/gen/go/api"
 )
 
 func Test_Integration_todoServer_Signup(t *testing.T) {

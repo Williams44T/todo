@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 	"todo/common"
-	"todo/dynamodb"
-	ddbMock "todo/dynamodb/mock"
+	"todo/interfaces/dynamodb"
+	ddbMock "todo/interfaces/dynamodb/mock"
+	"todo/interfaces/token_manager"
+	tmMock "todo/interfaces/token_manager/mock"
 	proto "todo/proto/gen/service"
-	"todo/service/token_manager"
-	tmMock "todo/service/token_manager/mock"
 
 	"google.golang.org/grpc/metadata"
 )

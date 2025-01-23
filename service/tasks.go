@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"todo/common"
-	"todo/dynamodb"
+	"todo/interfaces/dynamodb"
 	proto "todo/proto/gen/service"
 
 	"github.com/adhocore/gronx"

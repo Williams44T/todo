@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 	"todo/common"
-	"todo/dynamodb"
+	"todo/interfaces/dynamodb"
 	proto "todo/proto/gen/service"
 
 	"google.golang.org/grpc/metadata"

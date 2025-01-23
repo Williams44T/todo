@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 	"todo/common"
-	"todo/dynamodb"
+	"todo/interfaces/dynamodb"
+	"todo/interfaces/token_manager"
 	proto "todo/proto/gen/service"
-	"todo/service/token_manager"
 )
 
 func Test_Integration_todoServer_Signup(t *testing.T) {

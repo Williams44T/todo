@@ -42,14 +42,14 @@ jobs:
 
       - name: Add Tables to DynamoDB Local
         run : |
-          aws dynamodb create-table --cli-input-json file://dynamodb/table-definitions/users.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
-          aws dynamodb create-table --cli-input-json file://dynamodb/table-definitions/tasks.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
-          aws dynamodb create-table --cli-input-json file://dynamodb/table-definitions/events.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
+          aws dynamodb create-table --cli-input-json file://infrastructure/dynamodb/table_definitions/users.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
+          aws dynamodb create-table --cli-input-json file://infrastructure/table_definitions/tasks.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
+          aws dynamodb create-table --cli-input-json file://infrastructure/table_definitions/events.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
 
       - name: Populate Tables in DynamoDB Local
         run: |
           go run ./scripts/generate_ddb_batch_write_req
-          aws dynamodb batch-write-item --request-items file://dynamodb/mock/batch_write_req.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
+          aws dynamodb batch-write-item --request-items file://interfaces/dynamodb/mock/batch_write_req.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
 
       - name: Run API in background docker container
         run: |

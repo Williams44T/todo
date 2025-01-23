@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func Test_Integration_todoServer_AddTask(t *testing.T) {
+func Test_Integration_TodoServer_AddTask(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		req *proto.AddTaskReq
@@ -43,23 +43,23 @@ func Test_Integration_todoServer_AddTask(t *testing.T) {
 			// get database client
 			databaseClient, err := dynamodb.NewDynamoDBClient(tt.args.ctx)
 			if err != nil {
-				t.Errorf("integration todoServer.AddTask() failed to get database client: %v", err)
+				t.Errorf("integration TodoServer.AddTask() failed to get database client: %v", err)
 			}
 
-			tr := &todoServer{
+			tr := &TodoServer{
 				ddb: databaseClient,
 			}
 
 			_, err = tr.AddTask(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.AddTask() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.AddTask() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 		})
 	}
 }
 
-func Test_Integration_todoServer_GetTask(t *testing.T) {
+func Test_Integration_TodoServer_GetTask(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		req *proto.GetTaskReq
@@ -95,23 +95,23 @@ func Test_Integration_todoServer_GetTask(t *testing.T) {
 			// get database client
 			databaseClient, err := dynamodb.NewDynamoDBClient(tt.args.ctx)
 			if err != nil {
-				t.Errorf("integration todoServer.GetTask() failed to get database client: %v", err)
+				t.Errorf("integration TodoServer.GetTask() failed to get database client: %v", err)
 			}
 
-			tr := &todoServer{
+			tr := &TodoServer{
 				ddb: databaseClient,
 			}
 
 			_, err = tr.GetTask(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.GetTask() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.GetTask() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 		})
 	}
 }
 
-func Test_Integration_todoServer_GetAllTasks(t *testing.T) {
+func Test_Integration_TodoServer_GetAllTasks(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		req *proto.GetAllTasksReq
@@ -151,16 +151,16 @@ func Test_Integration_todoServer_GetAllTasks(t *testing.T) {
 			// get database client
 			databaseClient, err := dynamodb.NewDynamoDBClient(tt.args.ctx)
 			if err != nil {
-				t.Errorf("integration todoServer.GetAllTasks() failed to get database client: %v", err)
+				t.Errorf("integration TodoServer.GetAllTasks() failed to get database client: %v", err)
 			}
 
-			tr := &todoServer{
+			tr := &TodoServer{
 				ddb: databaseClient,
 			}
 
 			got, err := tr.GetAllTasks(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.GetAllTasks() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.GetAllTasks() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if tt.wantErr {
@@ -184,7 +184,7 @@ func Test_Integration_todoServer_GetAllTasks(t *testing.T) {
 	}
 }
 
-func Test_Integration_todoServer_UpdateTask(t *testing.T) {
+func Test_Integration_TodoServer_UpdateTask(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		req *proto.UpdateTaskReq
@@ -237,23 +237,23 @@ func Test_Integration_todoServer_UpdateTask(t *testing.T) {
 			// get database client
 			databaseClient, err := dynamodb.NewDynamoDBClient(tt.args.ctx)
 			if err != nil {
-				t.Errorf("integration todoServer.UpdateTask() failed to get database client: %v", err)
+				t.Errorf("integration TodoServer.UpdateTask() failed to get database client: %v", err)
 			}
 
-			tr := &todoServer{
+			tr := &TodoServer{
 				ddb: databaseClient,
 			}
 
 			_, err = tr.UpdateTask(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.UpdateTask() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.UpdateTask() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 		})
 	}
 }
 
-func Test_Integration_todoServer_DeleteTask(t *testing.T) {
+func Test_Integration_TodoServer_DeleteTask(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		req *proto.DeleteTaskReq
@@ -322,16 +322,16 @@ func Test_Integration_todoServer_DeleteTask(t *testing.T) {
 			// get database client
 			databaseClient, err := dynamodb.NewDynamoDBClient(tt.args.ctx)
 			if err != nil {
-				t.Errorf("integration todoServer.DeleteTask() failed to get database client: %v", err)
+				t.Errorf("integration TodoServer.DeleteTask() failed to get database client: %v", err)
 			}
 
-			tr := &todoServer{
+			tr := &TodoServer{
 				ddb: databaseClient,
 			}
 
 			_, err = tr.DeleteTask(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.DeleteTask() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.DeleteTask() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
@@ -341,7 +341,7 @@ func Test_Integration_todoServer_DeleteTask(t *testing.T) {
 				&proto.GetAllTasksReq{},
 			)
 			if err != nil {
-				t.Errorf("todoServer.GetAllTasks() error = %v", err)
+				t.Errorf("TodoServer.GetAllTasks() error = %v", err)
 			}
 			gotTaskIdSet := map[string]struct{}{}
 			for _, gotTask := range resp.Tasks {

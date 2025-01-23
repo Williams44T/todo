@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func Test_todoServer_DeleteTask(t *testing.T) {
+func Test_TodoServer_DeleteTask(t *testing.T) {
 	type fields struct {
 		UnimplementedTodoServer proto.UnimplementedTodoServer
 		ddb                     dynamodb.DynamoDBInterface
@@ -95,18 +95,18 @@ func Test_todoServer_DeleteTask(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tr := &todoServer{
+			tr := &TodoServer{
 				UnimplementedTodoServer: tt.fields.UnimplementedTodoServer,
 				ddb:                     tt.fields.ddb,
 				jwt:                     tt.fields.jwt,
 			}
 			got, err := tr.DeleteTask(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.DeleteTask() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.DeleteTask() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("todoServer.DeleteTask() = %v, want %v", got, tt.want)
+				t.Errorf("TodoServer.DeleteTask() = %v, want %v", got, tt.want)
 			}
 		})
 	}

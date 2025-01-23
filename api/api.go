@@ -10,13 +10,13 @@ import (
 	proto "todo/proto/gen/go/api"
 )
 
-type todoServer struct {
+type TodoServer struct {
 	proto.UnimplementedTodoServer
 	ddb dynamodb.DynamoDBInterface
 	jwt token_manager.TokenManagerInterface
 }
 
-func NewTodoServer(ctx context.Context) (*todoServer, error) {
+func NewTodoServer(ctx context.Context) (*TodoServer, error) {
 	// get database client
 	databaseClient, err := dynamodb.NewDynamoDBClient(ctx)
 	if err != nil {
@@ -33,7 +33,7 @@ func NewTodoServer(ctx context.Context) (*todoServer, error) {
 		return nil, fmt.Errorf("failed to get token manager: %v", err)
 	}
 
-	return &todoServer{
+	return &TodoServer{
 		ddb: databaseClient,
 		jwt: tokenManager,
 	}, nil

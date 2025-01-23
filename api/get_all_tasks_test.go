@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func Test_todoServer_GetAllTasks(t *testing.T) {
+func Test_TodoServer_GetAllTasks(t *testing.T) {
 	type fields struct {
 		UnimplementedTodoServer proto.UnimplementedTodoServer
 		ddb                     dynamodb.DynamoDBInterface
@@ -107,14 +107,14 @@ func Test_todoServer_GetAllTasks(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tr := &todoServer{
+			tr := &TodoServer{
 				UnimplementedTodoServer: tt.fields.UnimplementedTodoServer,
 				ddb:                     tt.fields.ddb,
 				jwt:                     tt.fields.jwt,
 			}
 			got, err := tr.GetAllTasks(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.GetAllTasks() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.GetAllTasks() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if tt.wantErr {

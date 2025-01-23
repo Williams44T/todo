@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func (t *todoServer) GetAllTasks(ctx context.Context, req *proto.GetAllTasksReq) (*proto.GetAllTasksResp, error) {
+func (t *TodoServer) GetAllTasks(ctx context.Context, req *proto.GetAllTasksReq) (*proto.GetAllTasksResp, error) {
 	// get userid from ctx
 	userIDs := metadata.ValueFromIncomingContext(ctx, common.USERID_METADATA_KEY)
 	if len(userIDs) == 0 {

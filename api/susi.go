@@ -23,7 +23,7 @@ func hashPassword(password string) (string, error) {
 
 // Signup hashes the password, generates a user id, and then adds the user to the database,
 // before returning an access jwt and the user id.
-func (t *todoServer) Signup(ctx context.Context, req *proto.SignupReq) (*proto.SignupResp, error) {
+func (t *TodoServer) Signup(ctx context.Context, req *proto.SignupReq) (*proto.SignupResp, error) {
 	// validate request
 	if req.FirstName == "" {
 		return nil, errors.New("first name cannot be blank")
@@ -76,7 +76,7 @@ func (t *todoServer) Signup(ctx context.Context, req *proto.SignupReq) (*proto.S
 
 // Signin gets the user with the given id, compares the given password and the stored hashed password,
 // and returns an access jwt if there is a match.
-func (t *todoServer) Signin(ctx context.Context, req *proto.SigninReq) (*proto.SigninResp, error) {
+func (t *TodoServer) Signin(ctx context.Context, req *proto.SigninReq) (*proto.SigninResp, error) {
 	// validate request
 	if req.UserID == "" {
 		return nil, errors.New("userid cannot be blank")

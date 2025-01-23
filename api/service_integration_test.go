@@ -13,7 +13,7 @@ import (
 	proto "todo/proto/gen/go/api"
 )
 
-func Test_Integration_todoServer_Signup(t *testing.T) {
+func Test_Integration_TodoServer_Signup(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		req *proto.SignupReq
@@ -42,7 +42,7 @@ func Test_Integration_todoServer_Signup(t *testing.T) {
 			// get database client
 			databaseClient, err := dynamodb.NewDynamoDBClient(tt.args.ctx)
 			if err != nil {
-				t.Errorf("integration todoServer.Signup() failed to get database client: %v", err)
+				t.Errorf("integration TodoServer.Signup() failed to get database client: %v", err)
 			}
 
 			// get token manager
@@ -55,21 +55,21 @@ func Test_Integration_todoServer_Signup(t *testing.T) {
 				t.Errorf("failed to get token manager: %v", err)
 			}
 
-			tr := &todoServer{
+			tr := &TodoServer{
 				ddb: databaseClient,
 				jwt: tokenManager,
 			}
 
 			_, err = tr.Signup(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.Signup() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.Signup() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 		})
 	}
 }
 
-func Test_Integration_todoServer_Signin(t *testing.T) {
+func Test_Integration_TodoServer_Signin(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		req *proto.SigninReq
@@ -96,7 +96,7 @@ func Test_Integration_todoServer_Signin(t *testing.T) {
 			// get database client
 			databaseClient, err := dynamodb.NewDynamoDBClient(tt.args.ctx)
 			if err != nil {
-				t.Errorf("integration todoServer.Signin() failed to get database client: %v", err)
+				t.Errorf("integration TodoServer.Signin() failed to get database client: %v", err)
 			}
 
 			// get token manager
@@ -109,14 +109,14 @@ func Test_Integration_todoServer_Signin(t *testing.T) {
 				t.Errorf("failed to get token manager: %v", err)
 			}
 
-			tr := &todoServer{
+			tr := &TodoServer{
 				ddb: databaseClient,
 				jwt: tokenManager,
 			}
 
 			_, err = tr.Signin(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("todoServer.Signin() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TodoServer.Signin() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 		})

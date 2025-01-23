@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"os"
 	"todo/common"
-	"todo/dynamodb"
+	"todo/interfaces/dynamodb"
+	"todo/interfaces/token_manager"
 	proto "todo/proto/gen/service"
-	"todo/service/token_manager"
 
 	"github.com/alexedwards/argon2id"
 	"github.com/google/uuid"

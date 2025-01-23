@@ -106,7 +106,7 @@ func main() {
 		},
 	}
 
-	file, err := os.Create("dynamodb/mock/batch_write_req.json")
+	file, err := os.Create("interfaces/dynamodb/mock/batch_write_req.json")
 	if err != nil {
 		log.Fatalf("failed to create file: %v", err)
 	}

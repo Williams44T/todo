@@ -3,7 +3,7 @@ package mock
 import (
 	"errors"
 	"fmt"
-	"todo/service/token_manager"
+	"todo/interfaces/token_manager"
 )
 
 // MockTokenManager mocks TockManager

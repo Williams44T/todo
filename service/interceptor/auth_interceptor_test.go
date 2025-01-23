@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"testing"
 	"todo/common"
-	"todo/service/token_manager"
-	"todo/service/token_manager/mock"
+	"todo/interfaces/token_manager"
+	"todo/interfaces/token_manager/mock"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"

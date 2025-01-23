@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"todo/common"
-	"todo/service/token_manager"
+	"todo/interfaces/token_manager"
 )
 
 // Interceptor holds all the interceptor logic for the server

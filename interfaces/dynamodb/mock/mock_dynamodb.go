@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"todo/dynamodb"
+	"todo/interfaces/dynamodb"
 )
 
 type MockDynamoDBClient struct {

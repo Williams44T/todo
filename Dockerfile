@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the server binary
-RUN go build -o bin/server ./cmd/service/service.go
+RUN go build -o bin/server ./cmd/api/api.go
 
 # Use a smaller base image for the final image
 FROM alpine:latest

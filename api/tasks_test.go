@@ -1,4 +1,4 @@
-package service
+package api
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 	ddbMock "todo/interfaces/dynamodb/mock"
 	"todo/interfaces/token_manager"
 	tmMock "todo/interfaces/token_manager/mock"
-	proto "todo/proto/gen/service"
+	proto "todo/proto/gen/go/api"
 
 	"google.golang.org/grpc/metadata"
 )

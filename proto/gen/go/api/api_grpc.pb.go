@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.2
-// source: service.proto
+// source: api.proto
 
-package service
+package api
 
 import (
 	context "context"
@@ -19,13 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Todo_Signup_FullMethodName      = "/service.Todo/Signup"
-	Todo_Signin_FullMethodName      = "/service.Todo/Signin"
-	Todo_AddTask_FullMethodName     = "/service.Todo/AddTask"
-	Todo_GetTask_FullMethodName     = "/service.Todo/GetTask"
-	Todo_GetAllTasks_FullMethodName = "/service.Todo/GetAllTasks"
-	Todo_UpdateTask_FullMethodName  = "/service.Todo/UpdateTask"
-	Todo_DeleteTask_FullMethodName  = "/service.Todo/DeleteTask"
+	Todo_Signup_FullMethodName      = "/api.Todo/Signup"
+	Todo_Signin_FullMethodName      = "/api.Todo/Signin"
+	Todo_AddTask_FullMethodName     = "/api.Todo/AddTask"
+	Todo_GetTask_FullMethodName     = "/api.Todo/GetTask"
+	Todo_GetAllTasks_FullMethodName = "/api.Todo/GetAllTasks"
+	Todo_UpdateTask_FullMethodName  = "/api.Todo/UpdateTask"
+	Todo_DeleteTask_FullMethodName  = "/api.Todo/DeleteTask"
 )
 
 // TodoClient is the client API for Todo service.
@@ -312,7 +312,7 @@ func _Todo_DeleteTask_Handler(srv interface{}, ctx context.Context, dec func(int
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Todo_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "service.Todo",
+	ServiceName: "api.Todo",
 	HandlerType: (*TodoServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -345,5 +345,5 @@ var Todo_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "service.proto",
+	Metadata: "api.proto",
 }

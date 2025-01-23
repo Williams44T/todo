@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package service;
+package api;
 
-option go_package = "./gen/service";
+option go_package = "./gen/go/api";
 
 import "tasks.proto";
 

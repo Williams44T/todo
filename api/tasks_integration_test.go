@@ -1,7 +1,7 @@
 //go:build integration
 // +build integration
 
-package service
+package api
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"time"
 	"todo/common"
 	"todo/interfaces/dynamodb"
-	proto "todo/proto/gen/service"
+	proto "todo/proto/gen/go/api"
 
 	"google.golang.org/grpc/metadata"
 )

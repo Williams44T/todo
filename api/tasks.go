@@ -1,4 +1,4 @@
-package service
+package api
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 
 	"todo/common"
 	"todo/interfaces/dynamodb"
-	proto "todo/proto/gen/service"
+	proto "todo/proto/gen/go/api"
 
 	"github.com/adhocore/gronx"
 	"github.com/google/uuid"

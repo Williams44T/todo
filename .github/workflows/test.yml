@@ -43,8 +43,8 @@ jobs:
       - name: Add Tables to DynamoDB Local
         run : |
           aws dynamodb create-table --cli-input-json file://infrastructure/dynamodb/table_definitions/users.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
-          aws dynamodb create-table --cli-input-json file://infrastructure/table_definitions/tasks.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
-          aws dynamodb create-table --cli-input-json file://infrastructure/table_definitions/events.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
+          aws dynamodb create-table --cli-input-json file://infrastructure/dynamodb/table_definitions/tasks.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
+          aws dynamodb create-table --cli-input-json file://infrastructure/dynamodb/table_definitions/events.json --endpoint-url ${{ env.AWS_ENDPOINT_URL }}
 
       - name: Populate Tables in DynamoDB Local
         run: |
